@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, ModalTitle } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-export const Login = ({ onUsernameSubmit }) => {
+const Signup = () => {
 	const navigate = useNavigate();
 	const [loginData, setLoginData] = useState({ username: "", password: "" });
 
@@ -16,32 +15,34 @@ export const Login = ({ onUsernameSubmit }) => {
 	const handleSubmit = async e => {
 		e.preventDefault();
 		try {
-			const result = await axios.post(`http://localhost:4000/auth/login`, loginData);
-			localStorage.setItem("accessToken", result.data.accessToken);
-			onUsernameSubmit(result.data.username);
+			const result = await axios.post(`http://localhost:4000/auth/signup`, loginData);
 			if (result.status === 200) {
-				navigate("/home");
+				navigate("/");
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
+
 	return (
 		<Container className='align-items-center d-flex' style={{ height: "100vh" }}>
 			<Form className='w-25' onSubmit={handleSubmit}>
 				<Form.Group>
+					<ModalTitle>Sign Up</ModalTitle>
 					<Form.Label>Enter your username</Form.Label>
 					<Form.Control type='text' name='username' required onChange={handleChange} />
 					<Form.Label>Password</Form.Label>
 					<Form.Control type='password' name='password' required onChange={handleChange} />
 				</Form.Group>
 				<Button type='submit' className='m-2'>
-					Login
+					Register !
 				</Button>
-				<Button variant='secondary' onClick={() => navigate("/signup")}>
-					Sign Up
+				<Button variant='secondary' onClick={() => navigate(-1)}>
+					Cancel
 				</Button>
 			</Form>
 		</Container>
 	);
 };
+
+export default Signup;
