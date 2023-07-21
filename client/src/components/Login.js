@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useLocalStorage from "../hooks/useLocalStorage";
 
-export const Login = ({ onUsernameSubmit }) => {
+export const Login = ({ onUsernameSubmit, onIdSubmit }) => {
 	const navigate = useNavigate();
-	const [loginData, setLoginData] = useState({ username: "", password: "" });
+	const [loginData, setLoginData] = useState({ username: "", password: "", id: "" });
 	const [alert, setAlert] = useState(false);
 
 	const handleChange = e => {
@@ -19,16 +20,17 @@ export const Login = ({ onUsernameSubmit }) => {
 		try {
 			const result = await axios.post(`http://localhost:4000/auth/login`, loginData);
 			localStorage.setItem("accessToken", result.data.accessToken);
+			onIdSubmit(result.data.id);
 			onUsernameSubmit(result.data.username);
 			if (result.status === 200) {
 				navigate("/home");
 			}
 		} catch (error) {
-			//alert("Wrong username or password");
 			setAlert(!alert);
-			//console.log(error);
 		}
 	};
+	useLocalStorage("username", loginData.username);
+	useLocalStorage("id", loginData.id);
 	return (
 		<Container className='align-items-center d-flex' style={{ height: "100vh" }}>
 			<Form className='w-25' onSubmit={handleSubmit}>
@@ -49,3 +51,5 @@ export const Login = ({ onUsernameSubmit }) => {
 		</Container>
 	);
 };
+
+export default Login;

@@ -1,19 +1,18 @@
-import React, { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import React, { useRef } from "react";
+import { Modal, Form, Button } from "react-bootstrap";
 import { useContacts } from "../contexts/ContactsProvider";
 
-const NewContactsModal = ({ closeModal }) => {
-	const [username, setUsername] = useState();
+export default function NewContactModal({ closeModal }) {
+	const idRef = useRef();
+	const userameRef = useRef();
 	const { createContact } = useContacts();
-	const handleSubmit = e => {
+
+	function handleSubmit(e) {
 		e.preventDefault();
-		createContact(username);
+
+		createContact(idRef.current.value, userameRef.current.value);
 		closeModal();
-	};
-	const handleChange = e => {
-		e.preventDefault();
-		setUsername(e.target.value);
-	};
+	}
 
 	return (
 		<>
@@ -21,16 +20,18 @@ const NewContactsModal = ({ closeModal }) => {
 			<Modal.Body>
 				<Form onSubmit={handleSubmit}>
 					<Form.Group>
-						<Form.Label>Username</Form.Label>
-						<Form.Control type='text' name='username' required onChange={handleChange} />
+						<Form.Label>Id</Form.Label>
+						<Form.Control type='text' ref={idRef} required />
 					</Form.Group>
-					<Button type='submit' className='mt-4'>
-						Search Contact
+					<Form.Group>
+						<Form.Label>Username</Form.Label>
+						<Form.Control type='text' ref={userameRef} required />
+					</Form.Group>
+					<Button className='mt-4' type='submit'>
+						Create
 					</Button>
 				</Form>
 			</Modal.Body>
 		</>
 	);
-};
-
-export default NewContactsModal;
+}

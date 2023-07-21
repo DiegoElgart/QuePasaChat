@@ -18,7 +18,7 @@ router.route("/login").post(async (req, res) => {
 			const ACCESS_SECRET_TOKEN = process.env.SECRET_KEY;
 			const accessToken = jwt.sign({ id: user._id }, ACCESS_SECRET_TOKEN);
 			res.header("access-token", accessToken);
-			res.json({ accessToken, username: user.username });
+			res.json({ accessToken, username: user.username, id: user._id });
 		} else {
 			res.status(401).json("Wrong username or password");
 		}
