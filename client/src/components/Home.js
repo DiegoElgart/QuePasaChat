@@ -1,31 +1,33 @@
-import { Avatar } from "@mui/material";
+import { useState } from "react";
+import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
-import SideNavbar from "./SideNavbar";
 
-export const Home = () => {
-	const { user, loading, error } = useSelector(store => store.user);
-	const { chat } = useSelector(store => store.chat);
+const Home = () => {
+	const { token } = useSelector(store => store.user);
+	const [message, setMessage] = useState({ message: "" });
+	const dispatch = useDispatch();
+	const handleChange = e => {
+		e.preventDefault();
+		setMessage(prevMsg => ({ ...prevMsg, [e.target.name]: e.target.value }));
+	};
 
-	if (!user._id) {
-	}
-
+	const handleSubmit = e => {
+		e.preventDefault();
+	};
 	return (
-		<div className='home-cont'>
-			<SideNavbar />
-			{/* {chat._id ? <br /> : <MessageStarter {...user} />} */}
-		</div>
-	);
-};
-
-const MessageStarter = ({ username }) => {
-	return (
-		<div>
-			<div>
-				<Avatar sx={{ width: 70, height: 70 }} />
-				<h3>Welcome, {username}</h3>
-				<p>Please select a chat to start messaging.</p>
+		<div className='container'>
+			<Sidebar />
+			<div className='main'>
+				<div className='conversation'>
+					<p>chat goes here</p>
+				</div>
+				<form className='dialog'>
+					<input type='textarea' className='textInput' name='message' onChange={handleChange} />
+					<input type='submit' value='Send' className='sendButton' />
+				</form>
 			</div>
 		</div>
 	);
 };
+
+export default Home;

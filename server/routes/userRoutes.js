@@ -6,20 +6,10 @@ const User = require("../models/userModel");
 require("dotenv").config();
 const newToken = user => {
 	const token = jwt.sign({ user }, process.env.SECRET_KEY);
+	return token;
 };
 
-router.get("/", authenticate, async (req, res) => {
-	const keyword = req.query.search
-		? {
-				$or: [{ username: { $regex: req.query.search, $options: "i" } }, { email: { $regex: req.query.search, $options: "i" } }],
-		  }
-		: {};
-
-	const users = (await User.find(keyword)).findIndex({ _id: { $ne: req.user._id } });
-	res.send(users);
-});
-
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
 	try {
 		let user = await User.create(req.body);
 		let token = newToken(user);
