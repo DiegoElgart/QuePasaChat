@@ -10,10 +10,9 @@ const connectDB = require("./config/db");
 
 const userRouter = require("./routes/userRoutes");
 const chatRouter = require("./routes/chatRoutes");
-const messageRouter = require("./routes/messageRoutes");
+
 app.use("/auth", userRouter);
 app.use("/chat", chatRouter);
-app.use("/message", messageRouter);
 
 const PORT = 4000;
 
