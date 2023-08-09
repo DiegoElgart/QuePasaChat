@@ -3,7 +3,6 @@ import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 
 const Home = () => {
-	const { token } = useSelector(store => store.user);
 	const [message, setMessage] = useState({ message: "" });
 	const dispatch = useDispatch();
 	const handleChange = e => {

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { authLogin } from "../Slices/Auth/authAction";
+import { login } from "../Redux/Actions/userActions";
 import { useNavigate } from "react-router-dom";
+import { selectUser, selectUserError } from "../Redux/Slices/authSlice";
 
 const Login = () => {
-	const { user, error } = useSelector(store => store.user);
+	const user = useSelector(selectUser);
+	const error = useSelector(selectUserError);
 	const [loginData, setLoginData] = useState({ email: "", password: "" });
 
 	const dispatch = useDispatch();
@@ -18,16 +20,17 @@ const Login = () => {
 	};
 
 	useEffect(() => {
-		if (user._id && error === false) {
+		console.log(user, error);
+		if (user && error === false) {
 			naviage("/home");
-		} else if (error === true) {
+		} else if (error) {
 			alert("Wrong Password or Email");
 		}
 	}, [user, error]);
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		dispatch(authLogin(loginData));
+		dispatch(login(loginData));
 	};
 	return (
 		<div className='formContainer'>
