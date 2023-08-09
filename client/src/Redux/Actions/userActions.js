@@ -9,8 +9,9 @@ export const login = createAsyncThunk("auth/login", async loginData => {
 	return response.data;
 });
 
-export const addUser = createAsyncThunk("users/addUser", async newUser => {
+export const register = createAsyncThunk("users/register", async newUser => {
 	const response = await axios.post(`${AUTH_URL}/register`, newUser);
+	localStorage.setItem("accessToken", response.data.token);
 	return response.data;
 });
 

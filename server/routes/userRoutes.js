@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
 	const { email, username, password } = req.body;
 	try {
 		let checkIfExists = await User.findOne({ email: email });
-		if (!checkIfExists) {
+		if (checkIfExists == null) {
 			let user = await User.create({ email: email, username: username, password: password });
 			let token = newToken(user);
 			return res.status(200).send({ user, token });

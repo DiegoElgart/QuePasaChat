@@ -37,11 +37,7 @@ io.on("connection", socket => {
 		socket.join(room);
 	});
 	socket.on("new message", recievedMessage => {
-		var chat = recievedMessage.chat;
-		chat.users.forEach(user => {
-			if (user == recievedMessage.sender._id) return;
-			socket.in(user).emit("message recieved", recievedMessage);
-		});
+		io.emit("message recieved", recievedMessage);
 	});
 	socket.off("setup", () => {
 		socket.leave(userData._id);

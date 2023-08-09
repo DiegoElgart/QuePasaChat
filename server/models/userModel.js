@@ -12,6 +12,7 @@ const userSchema = new Schema(
 			required: true,
 			default: false,
 		},
+		contacts: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
 	},
 	{ timestamps: true, versionKey: false }
 );

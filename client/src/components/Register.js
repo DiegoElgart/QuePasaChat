@@ -1,19 +1,20 @@
+import "../App.css";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { login } from "../Redux/Actions/userActions";
 import { useNavigate } from "react-router-dom";
 import { selectUser, selectUserError } from "../Redux/Slices/authSlice";
+import { register } from "../Redux/Actions/userActions";
 
-const Login = () => {
+const Register = () => {
 	const user = useSelector(selectUser);
 	const error = useSelector(selectUserError);
-	const [loginData, setLoginData] = useState({ email: "", password: "" });
+	const [registerData, setregisterData] = useState({ username: "", email: "", password: "" });
 
 	const dispatch = useDispatch();
-	const naviage = useNavigate();
+	const navigate = useNavigate();
 
 	const handleChange = e => {
-		setLoginData(prevState => ({
+		setregisterData(prevState => ({
 			...prevState,
 			[e.target.name]: e.target.value,
 		}));
@@ -21,31 +22,34 @@ const Login = () => {
 
 	useEffect(() => {
 		if (user && error === false) {
-			naviage("/home");
+			navigate("/home");
 		} else if (error) {
-			alert("Wrong Password or Email");
+			alert("email already registered!");
 		}
 	}, [user, error]);
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		dispatch(login(loginData));
+		dispatch(register(registerData));
 	};
 	return (
 		<div className='formContainer'>
 			<form className='login' onSubmit={handleSubmit}>
+				<label>Username</label>
+				<input type='text' name='username' onChange={handleChange} />
+				<br />
 				<label>Email</label>
 				<input type='text' name='email' onChange={handleChange} />
 				<br />
 				<label>Password</label>
 				<input type='password' name='password' onChange={handleChange} />
 				<br />
-				<input type='submit' value='Login' />
+				<input type='submit' value='Sign Up' />
 				<br />
-				<a href='/register'>New? Sign Up here!</a>
+				<a href='/'>Login</a>
 			</form>
 		</div>
 	);
 };
 
-export default Login;
+export default Register;
