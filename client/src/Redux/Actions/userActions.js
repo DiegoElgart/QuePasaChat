@@ -18,3 +18,13 @@ export const register = createAsyncThunk("users/register", async newUser => {
 export const logout = createAsyncThunk("user/logout", async () => {
 	localStorage.removeItem("accessToken");
 });
+
+export const getAllUsers = createAsyncThunk("user/getAllUsers", async () => {
+	const response = await axios.get(`${AUTH_URL}/users`);
+	return response.data;
+});
+
+export const updateUser = createAsyncThunk("user/update", async request => {
+	const response = await axios.post(`${AUTH_URL}/${request.id}/contacts`, { contactId: request.contactId });
+	return response.data;
+});

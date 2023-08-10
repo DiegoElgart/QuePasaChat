@@ -35,7 +35,7 @@ const Home = ({ socket }) => {
 				</div>
 				<form className='dialog' onSubmit={handleSubmit}>
 					<input type='textarea' className='textInput' name='message' onChange={handleChange} value={message} />
-					<input type='submit' value='Send' className='sendButton' />
+					<input type='submit' value='Send' className='primaryBtn sendBtn' />
 				</form>
 			</div>
 		</div>

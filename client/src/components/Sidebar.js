@@ -7,6 +7,7 @@ import Conversations from "./Conversations";
 import Contacts from "./Contacts";
 import Groups from "./Groups";
 import ContactModal from "./ContactModal";
+import ConversationModal from "./ConversationModal";
 
 const Sidebar = () => {
 	const dispatch = useDispatch();
@@ -49,7 +50,8 @@ const Sidebar = () => {
 			<button className='primaryBtn' onClick={() => setIsOpen(true)}>
 				New {activeKey}
 			</button>
-			{isOpen && <ContactModal setIsOpen={setIsOpen} />}
+			{isOpen && activeKey === "Contact" ? <ContactModal setIsOpen={setIsOpen} /> : null}
+			{isOpen && activeKey === "Conversation" ? <ConversationModal setIsOpen={setIsOpen} /> : null}
 		</div>
 	);
 };

@@ -96,18 +96,19 @@
 	font-size: 0.8rem;
 	border: none;
 	color: #fff;
-	background: #ff3e4e;
+	background: #3b26b1;
 	transition: all 0.25s ease;
 }
 
 .deleteBtn:hover {
 	box-shadow: 0 10px 20px -10px rgba(255, 62, 78, 0.6);
 	transform: translateY(-5px);
-	background: #ff3e4e;
+	background: #3dc6df;
 }
 
 .cancelBtn {
 	margin-top: 10px;
+	margin-left: 5px;
 	cursor: pointer;
 	font-weight: 500;
 	padding: 11px 28px;
@@ -122,5 +123,7 @@
 .cancelBtn:hover {
 	box-shadow: none;
 	transform: none;
+	transform: translateY(-5px);
+
 	background: whitesmoke;
 }

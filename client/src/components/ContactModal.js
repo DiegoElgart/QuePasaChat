@@ -1,14 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../styles/Modal.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAllUsers, selectUser } from "../Redux/Slices/authSlice";
+import { updateUser } from "../Redux/Actions/userActions";
 const ContactModal = ({ setIsOpen }) => {
-	const [contactData, setContactData] = useState({ email: "", username: "" });
+	const dispatch = useDispatch();
+	const [contactId, setContactId] = useState("");
+	const [usersList, setUsersList] = useState([]);
+	const users = useSelector(selectAllUsers);
+	const { user } = useSelector(selectUser);
 
-	const handleChange = e => {
+	useEffect(() => {
+		const filteredUsers = users.filter(fUser => fUser._id !== user._id);
+		setUsersList(filteredUsers);
+	}, [users, user]);
+
+	const handleSelect = e => {
 		e.preventDefault();
-		setContactData(prevState => ({
-			...prevState,
-			[e.target.name]: e.target.value,
-		}));
+		setContactId(e.target.value);
+	};
+
+	const handleSubmit = e => {
+		e.preventDefault();
+		const request = { id: user._id, contactId: contactId };
+		dispatch(updateUser(request));
+		setIsOpen(false);
 	};
 
 	return (
@@ -17,17 +33,28 @@ const ContactModal = ({ setIsOpen }) => {
 				<div className={styles.centered}>
 					<div className={styles.modal}>
 						<div className={styles.modalHeader}>
-							<h5 className={styles.heading}>Create New Contact</h5>
+							<h5 className={styles.heading}>Add New Contact</h5>
 						</div>
-						<button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
-							x
-						</button>
-						<form className={styles.modalContent}>
-							<label>Email</label>
-							<input type='text' name='email' onChange={handleChange} />
-							<label>Username</label>
-							<input type='text' name='username' onChange={handleChange} />
-							<button className={styles.cancelBtn}>Cancel</button>
+
+						<form className={styles.modalContent} onSubmit={handleSubmit}>
+							<br />
+							<label>By Email</label>
+							<select onChange={handleSelect}>
+								<option>---------------</option>
+								{usersList.map(user => (
+									<option key={user._id} value={user._id}>
+										{user.email}
+									</option>
+								))}
+							</select>
+							<br />
+							<br />
+
+							<button className={styles.deleteBtn}>Add Contact</button>
+
+							<button className={styles.cancelBtn} onClick={() => setIsOpen(false)}>
+								Cancel
+							</button>
 						</form>
 					</div>
 				</div>

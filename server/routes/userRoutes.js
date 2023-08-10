@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
-
+const mongoose = require("mongoose");
 const router = express.Router();
 
 require("dotenv").config();
@@ -23,7 +23,7 @@ router.get("/users", async (req, res) => {
 router.post("/login", async (req, res) => {
 	try {
 		const { email, password } = req.body;
-		let user = await User.findOne({ email: email });
+		let user = await User.findOne({ email: email }).populate("contacts", "username");
 
 		if (!user) return res.status(400).send({ message: "Email not exist" });
 		let match = user.checkPassword(password);
@@ -53,7 +53,8 @@ router.post("/register", async (req, res) => {
 router.get("/:id", async (req, res) => {
 	const { id } = req.params;
 	try {
-		let user = await User.findById(id);
+		let user = await User.findById(id).populate("contacts", "username");
+
 		return res.status(200).send(user);
 	} catch (err) {
 		return res.status(500).send(err.message);
@@ -71,7 +72,30 @@ router.post("/:id", async (req, res) => {
 		return res.status(500).send(err.message);
 	}
 });
+router.post("/:id/contacts", async (req, res) => {
+	const { id } = req.params;
+	const { contactId } = req.body;
+	try {
+		let thisUser = await User.findById(id);
+		if (thisUser.contacts.includes(contactId)) {
+			return res.status(400).send("Users Already are contacts");
+		} else {
+			thisUser.contacts.push(new mongoose.Types.ObjectId(contactId));
+			thisUser.save();
+		}
 
+		let otherUser = await User.findById(contactId);
+		if (otherUser.contacts.includes(id)) {
+			return res.status(400).send("Users Already are contacts");
+		} else {
+			otherUser.contacts.push(new mongoose.Types.ObjectId(id));
+			otherUser.save();
+		}
+		return res.status(200).send(thisUser);
+	} catch (err) {
+		return res.status(500).send(err.message);
+	}
+});
 router.post("/delete/:id", async (req, res) => {
 	try {
 		let user = await User.findByIdAndDelete(req.params.id);
