@@ -27,7 +27,7 @@ const Sidebar = () => {
 	};
 	return (
 		<div style={{ height: "100vh" }}>
-			{/* <span className='username'>Hi, {user.username}</span> */}
+			<span className='username'>Hi, {user.username}</span>
 			<ul className='sidebar '>
 				<li className='sidebarItem' id='Contact' onClick={handleContext}>
 					Contacts
@@ -43,15 +43,15 @@ const Sidebar = () => {
 				</li>
 			</ul>
 			<div className='content'>
-				{activeKey === "Conversation" ? <Conversations /> : null}
-				{activeKey === "Contact" ? <Contacts /> : null}
+				{activeKey === "Conversation" ? <Conversations user={user} /> : null}
+				{activeKey === "Contact" ? <Contacts user={user} /> : null}
 				{activeKey === "Group" ? <Groups /> : null}
 			</div>
 			<button className='primaryBtn' onClick={() => setIsOpen(true)}>
 				New {activeKey}
 			</button>
-			{isOpen && activeKey === "Contact" ? <ContactModal setIsOpen={setIsOpen} /> : null}
-			{isOpen && activeKey === "Conversation" ? <ConversationModal setIsOpen={setIsOpen} /> : null}
+			{isOpen && activeKey === "Contact" ? <ContactModal setIsOpen={setIsOpen} user={user} /> : null}
+			{isOpen && activeKey === "Conversation" ? <ConversationModal setIsOpen={setIsOpen} user={user} /> : null}
 		</div>
 	);
 };

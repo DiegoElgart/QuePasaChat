@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../Redux/Actions/userActions";
 import { useNavigate } from "react-router-dom";
-import { selectUser, selectUserError } from "../Redux/Slices/authSlice";
+import { selectUser, selectUserError, selectUserStatus } from "../Redux/Slices/authSlice";
 
 const Login = () => {
 	const user = useSelector(selectUser);
 	const error = useSelector(selectUserError);
+	const status = useSelector(selectUserStatus);
 	const [loginData, setLoginData] = useState({ email: "", password: "" });
 
 	const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const Login = () => {
 	};
 
 	useEffect(() => {
-		if (user && error === false) {
+		if (user && error === false && status === "succeeded") {
 			naviage("/home");
 		} else if (error) {
 			alert("Wrong Password or Email");

@@ -28,18 +28,9 @@ let server = app.listen(PORT, async (req, res) => {
 const io = socket(server, { cors: { "Access-Control-Allow-Origin": "*", origin: "http://localhost:3000" } });
 
 io.on("connection", socket => {
-	socket.on("setup", userData => {
-		socket.join(userData._id);
-		socket.emit("connected");
-	});
+	//console.log(`User Connected: ${socket.id}`);
 
-	socket.on("join chat", room => {
-		socket.join(room);
-	});
-	socket.on("new message", recievedMessage => {
-		io.emit("message recieved", recievedMessage);
-	});
-	socket.off("setup", () => {
-		socket.leave(userData._id);
+	socket.on("send_message", data => {
+		socket.broadcast.emit("receive_message", data);
 	});
 });

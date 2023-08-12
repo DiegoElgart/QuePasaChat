@@ -65,6 +65,8 @@ const authSlice = createSlice({
 });
 
 export const selectUser = state => state.auth.user;
+export const selectUserStatus = state => state.auth.status;
+export const selectUserContacts = state => state.auth.user.contacts;
 export const selectUserError = state => state.auth.error;
 export const selectAllUsers = state => state.auth.users;
 export default authSlice.reducer;
