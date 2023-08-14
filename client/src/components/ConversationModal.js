@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/Modal.module.css";
-import { useConversations } from "../context/ConversationProvider";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createChat } from "../Redux/Actions/chatActions";
+import { selectChat } from "../Redux/Slices/chatSlice";
+import { selectUser, selectUserContacts } from "../Redux/Slices/authSlice";
 const ConversationModal = ({ setIsOpen, user }) => {
 	const [selecetContactsIds, setSelectedContactsIds] = useState([]);
 	const dispatch = useDispatch();
-	// const { createConversation } = useConversations();
 
+	useEffect(() => {
+		console.log(user.contacts);
+	}, [user]);
 	const handleCheckboxChange = contactId => {
 		setSelectedContactsIds(prevSelecetedContactsIds => {
 			if (prevSelecetedContactsIds.includes(contactId)) {
@@ -22,9 +25,8 @@ const ConversationModal = ({ setIsOpen, user }) => {
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		// createConversation(selecetContactsIds);
-		//console.log(selecetContactsIds, user._id);
-		dispatch(createChat(selecetContactsIds, user._id));
+		const userId = user._id;
+		dispatch(createChat([selecetContactsIds]));
 		setIsOpen(false);
 	};
 
@@ -37,7 +39,7 @@ const ConversationModal = ({ setIsOpen, user }) => {
 							<h5 className={styles.heading}>Add New Contact</h5>
 						</div>
 
-						<form className={styles.modalContent} onSubmit={handleSubmit}>
+						<form className={styles.modalContent}>
 							<ul>
 								{user.contacts.map(contact => (
 									<li style={{ listStyle: "none", fontSize: "large" }} key={contact._id}>
@@ -46,7 +48,7 @@ const ConversationModal = ({ setIsOpen, user }) => {
 									</li>
 								))}
 							</ul>
-							<button type='submit' value='Create new conversation' className='primaryBtn'>
+							<button type='submit' value='Create new conversation' className='primaryBtn' onClick={handleSubmit}>
 								Create
 							</button>
 							<button className={styles.cancelBtn} onClick={() => setIsOpen(false)}>

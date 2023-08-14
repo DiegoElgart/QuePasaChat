@@ -31,6 +31,8 @@ io.on("connection", socket => {
 	//console.log(`User Connected: ${socket.id}`);
 
 	socket.on("send_message", data => {
-		socket.broadcast.emit("receive_message", data);
+		console.log(data);
+		const room = socket.join(data.senderId);
+		socket.to(room).emit("receive_message", data);
 	});
 });

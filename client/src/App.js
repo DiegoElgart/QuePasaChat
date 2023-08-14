@@ -6,11 +6,13 @@ import Register from "./components/Register";
 import { useEffect } from "react";
 
 import { getAllUsers } from "./Redux/Actions/userActions";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "./Redux/Slices/authSlice";
 
 function App() {
+	const { user } = useSelector(selectUser);
 	const dispatch = useDispatch();
+	
 	useEffect(() => {
 		dispatch(getAllUsers());
 	}, []);
@@ -18,7 +20,7 @@ function App() {
 	return (
 		<Routes>
 			<Route path='/' element={<Login />} />
-			<Route path='/home' element={<Home />} />
+			<Route path='/home' element={<Home user={user} />} />
 			<Route path='/register' element={<Register />} />
 		</Routes>
 	);

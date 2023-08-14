@@ -18,7 +18,7 @@ const Sidebar = () => {
 		navigate("/");
 	};
 
-	const [activeKey, setActiveKey] = useState("Conversation");
+	const [activeKey, setActiveKey] = useState("Contacts");
 	const [isOpen, setIsOpen] = useState(false);
 
 	const handleContext = e => {
@@ -27,7 +27,7 @@ const Sidebar = () => {
 	};
 	return (
 		<div style={{ height: "100vh" }}>
-			<span className='username'>Hi, {user.username}</span>
+			{user && <span className='username'>Hi, {user.username}</span>}
 			<ul className='sidebar '>
 				<li className='sidebarItem' id='Contact' onClick={handleContext}>
 					Contacts

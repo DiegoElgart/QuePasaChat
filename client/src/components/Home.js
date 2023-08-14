@@ -5,11 +5,10 @@ import { io } from "socket.io-client";
 
 const socket = io("http://localhost:4000");
 
-const Home = () => {
+const Home = ({ user }) => {
 	const [message, setMessage] = useState("");
 	const [messagedReceived, setMessagedReceived] = useState([]);
 	const dispatch = useDispatch();
-
 	const handleChange = e => {
 		e.preventDefault();
 		// setMessage(prevMsg => ({ ...prevMsg, [e.target.name]: e.target.value }));
@@ -18,13 +17,14 @@ const Home = () => {
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		socket.emit("send_message", message);
+		socket.emit("send_message", { senderId: user._id, message: message });
 		setMessage("");
 	};
 
 	useEffect(() => {
 		socket.on("receive_message", data => {
-			setMessagedReceived(data);
+			console.log(data);
+			setMessagedReceived(data.message);
 		});
 	}, [socket]);
 

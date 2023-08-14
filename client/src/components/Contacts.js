@@ -1,7 +1,3 @@
-import { useSelector } from "react-redux";
-import { selectUser } from "../Redux/Slices/authSlice";
-import { useEffect, useState } from "react";
-
 const Contacts = ({ user }) => {
 	return (
 		<>
