@@ -1,6 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
-
+import { useDispatch, useSelector } from "react-redux";
+import { addContactToUser } from "../Redux/Actions/userActions";
+import { selectUser } from "../Redux/Slices/authSlice";
+import { useEffect } from "react";
+import { getAllUsers } from "../Redux/Actions/userActions";
 const ContactsContext = React.createContext();
 
 export function useContacts() {
@@ -8,13 +12,20 @@ export function useContacts() {
 }
 
 export function ContactsProvider({ children }) {
-	const [contacts, setContacts] = useLocalStorage("contacts", []);
+	const dispatch = useDispatch();
+	const { user } = useSelector(selectUser);
+	const [contacts, setContacts] = useState(user.contacts);
+	useEffect(() => {
+		dispatch(getAllUsers());
+	}, []);
 
-	function createContact(id, name) {
+	function createContact(id, username) {
 		setContacts(prevContacts => {
-			return [...prevContacts, { id, name }];
+			return [...prevContacts, { id, username }];
 		});
+
+		dispatch(addContactToUser({ id: user._id, contactId: id }));
 	}
 
-	return <ContactsContext.Provider value={{ contacts, createContact }}>{children}</ContactsContext.Provider>;
+	return <ContactsContext.Provider value={{ createContact }}>{children}</ContactsContext.Provider>;
 }

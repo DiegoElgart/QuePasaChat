@@ -26,7 +26,7 @@ export const getAllUsers = createAsyncThunk("user/getAllUsers", async () => {
 	return response.data;
 });
 
-export const updateUser = createAsyncThunk("user/update", async request => {
+export const addContactToUser = createAsyncThunk("user/update", async request => {
 	const response = await axios.post(`${AUTH_URL}/${request.id}/contacts`, { contactId: request.contactId });
 	return response.data;
 });

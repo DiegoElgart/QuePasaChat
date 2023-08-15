@@ -1,14 +1,15 @@
 import React from "react";
 import { ListGroup } from "react-bootstrap";
-import { useContacts } from "../context/ContactsProvider";
+import { useSelector } from "react-redux";
+import { selectUser } from "../Redux/Slices/authSlice";
 
 export default function Contacts() {
-	const { contacts } = useContacts();
+	const { user } = useSelector(selectUser);
 
 	return (
 		<ListGroup variant='flush'>
-			{contacts.map(contact => (
-				<ListGroup.Item key={contact.id}>{contact.name}</ListGroup.Item>
+			{user.contacts.map(contact => (
+				<ListGroup.Item key={contact._id}>{contact.username}</ListGroup.Item>
 			))}
 		</ListGroup>
 	);

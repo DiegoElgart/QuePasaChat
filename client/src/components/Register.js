@@ -37,8 +37,8 @@ const Register = ({ setIsOpen, onIdSubmit }) => {
 		setIsOpen(false);
 	};
 	return (
-		<Container>
-			<Form className={styles.modalContent} onSubmit={handleSubmit}>
+		<Container className='align-items-center justify-content-center d-flex'>
+			<Form onSubmit={handleSubmit}>
 				<Form.Group>
 					<Form.Label>Username</Form.Label>
 					<Form.Control type='text' name='username' onChange={handleChange} />

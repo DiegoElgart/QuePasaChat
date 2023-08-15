@@ -4,8 +4,9 @@ import Conversations from "./Conversations";
 import Contacts from "./Contacts";
 import NewContactModal from "./NewContactModal";
 import NewConversationModal from "./NewConversationModal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Redux/Actions/userActions";
+import { selectUser } from "../Redux/Slices/authSlice";
 
 const CONVERSATIONS_KEY = "conversations";
 const CONTACTS_KEY = "contacts";
@@ -14,6 +15,7 @@ export default function Sidebar({ id }) {
 	const [activeKey, setActiveKey] = useState(CONVERSATIONS_KEY);
 	const [modalOpen, setModalOpen] = useState(false);
 	const conversationsOpen = activeKey === CONVERSATIONS_KEY;
+	const { user } = useSelector(selectUser);
 	const dispatch = useDispatch();
 
 	function closeModal() {
@@ -46,8 +48,8 @@ export default function Sidebar({ id }) {
 						<Contacts />
 					</Tab.Pane>
 				</Tab.Content>
-				<div className='p-2 border-top border-right small'>
-					Your Id: <span className='text-muted'>{id}</span>
+				<div className='p-2 border-top border-right '>
+					You're : <span className='text-muted'>{user.username}</span>
 				</div>
 				<Button onClick={() => setModalOpen(true)} className='rounded-0'>
 					New {conversationsOpen ? "Conversation" : "Contact"}
