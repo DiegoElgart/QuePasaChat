@@ -28,11 +28,18 @@ let server = app.listen(PORT, async (req, res) => {
 const io = socket(server, { cors: { "Access-Control-Allow-Origin": "*", origin: "http://localhost:3000" } });
 
 io.on("connection", socket => {
-	//console.log(`User Connected: ${socket.id}`);
+	const id = socket.handshake.query.id;
+	socket.join(id);
 
-	socket.on("send-message", data => {
-		console.log(data);
-		const room = socket.join(data.senderId);
-		socket.to(room).emit("receive-message", data);
+	socket.on("send-message", ({ recipients, text }) => {
+		recipients.forEach(recipient => {
+			const newRecipients = recipients.filter(r => r !== recipient);
+			newRecipients.push(id);
+			socket.broadcast.to(recipient).emit("receive-message", {
+				recipients: newRecipients,
+				sender: id,
+				text,
+			});
+		});
 	});
 });

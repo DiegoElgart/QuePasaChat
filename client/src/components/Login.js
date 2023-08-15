@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Container, Form, Button } from "react-bootstrap";
+
 import { login } from "../Redux/Actions/userActions";
 import { selectUser, selectUserError, selectUserStatus } from "../Redux/Slices/authSlice";
 import Register from "./Register";
@@ -22,8 +24,8 @@ const Login = ({ onIdSubmit }) => {
 
 	useEffect(() => {
 		if (user && error === false && status === "succeeded") {
-			const id = user.user._id;
-			onIdSubmit(id);
+			//const id = user.user._id;
+			//onIdSubmit(id);
 		} else if (error) {
 			alert("Wrong Password or Email");
 		}
@@ -34,22 +36,25 @@ const Login = ({ onIdSubmit }) => {
 		dispatch(login(loginData));
 	};
 	return (
-		<div className='formContainer'>
+		<Container className='align-items-center d-flex' style={{ height: "100vh" }}>
 			{!isOpen && (
-				<form className='login' onSubmit={handleSubmit}>
-					<label>Email</label>
-					<input type='text' name='email' onChange={handleChange} required />
-					<br />
-					<label>Password</label>
-					<input type='password' name='password' onChange={handleChange} required />
-					<br />
-					<button type='submit'>Login</button>
-					<br />
-					<button onClick={() => setIsOpen(!isOpen)}>New? Sign Up here!</button>
-				</form>
+				<Form onSubmit={handleSubmit} className='w-100'>
+					<Form.Group className='w-50'>
+						<Form.Label>Enter Your Email</Form.Label>
+						<Form.Control type='text' name='email' required onChange={handleChange} />
+						<Form.Label>Enter Your Password</Form.Label>
+						<Form.Control type='password' required name='password' onChange={handleChange} />
+					</Form.Group>
+					<Button type='submit' className='mr-2'>
+						Login
+					</Button>
+					<Button onClick={() => setIsOpen(!isOpen)} variant='secondary'>
+						Create A New Id
+					</Button>
+				</Form>
 			)}
-			{isOpen && <Register setIsOpen={setIsOpen} />}
-		</div>
+			{isOpen && <Register onIdSubmit={onIdSubmit} setIsOpen={setIsOpen} />}
+		</Container>
 	);
 };
 
