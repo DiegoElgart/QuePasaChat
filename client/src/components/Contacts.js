@@ -1,13 +1,14 @@
-const Contacts = ({ user }) => {
+import { useContacts } from "../context/ContactsProvider";
+const Contacts = () => {
+	const { contacts } = useContacts();
 	return (
 		<>
 			<ul>
-				{user &&
-					user.contacts.map(contact => (
-						<li style={{ listStyle: "none", fontSize: "large" }} key={contact._id}>
-							{contact.username}
-						</li>
-					))}
+				{contacts.map(contact => (
+					<li style={{ listStyle: "none", fontSize: "large" }} key={contact._id}>
+						{contact.username}
+					</li>
+				))}
 			</ul>
 		</>
 	);

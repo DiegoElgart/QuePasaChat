@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch } from "react-redux";
-import { io } from "socket.io-client";
 
-const socket = io("http://localhost:4000");
-
-const Home = ({ user }) => {
+const Home = () => {
 	const [message, setMessage] = useState("");
 	const [messagedReceived, setMessagedReceived] = useState([]);
 	const dispatch = useDispatch();
@@ -17,16 +14,16 @@ const Home = ({ user }) => {
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		socket.emit("send_message", { senderId: user._id, message: message });
+		//socket.emit("send_message", { senderId: user._id, message: message });
 		setMessage("");
 	};
 
-	useEffect(() => {
-		socket.on("receive_message", data => {
-			console.log(data);
-			setMessagedReceived(data.message);
-		});
-	}, [socket]);
+	// useEffect(() => {
+	// 	socket.on("receive_message", data => {
+	// 		console.log(data);
+	// 		setMessagedReceived(data.message);
+	// 	});
+	// }, [socket]);
 
 	return (
 		<div className='container'>

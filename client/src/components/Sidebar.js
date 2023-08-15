@@ -9,7 +9,7 @@ import Groups from "./Groups";
 import ContactModal from "./ContactModal";
 import ConversationModal from "./ConversationModal";
 
-const Sidebar = () => {
+const Sidebar = ({ username }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { user } = useSelector(selectUser);
@@ -27,7 +27,7 @@ const Sidebar = () => {
 	};
 	return (
 		<div style={{ height: "100vh" }}>
-			{user && <span className='username'>Hi, {user.username}</span>}
+			{user && <span className='username'>Hi, {username}</span>}
 			<ul className='sidebar '>
 				<li className='sidebarItem' id='Contact' onClick={handleContext}>
 					Contacts

@@ -1,29 +1,34 @@
 import "./App.css";
-import Home from "./components/Home";
 import Login from "./components/Login";
-import { Route, Routes } from "react-router-dom";
-import Register from "./components/Register";
-import { useEffect } from "react";
-
-import { getAllUsers } from "./Redux/Actions/userActions";
-import { useDispatch, useSelector } from "react-redux";
+import { SocketProvider } from "./context/SocketProvider";
+import { ContactsProvider } from "./context/ContactsProvider";
+import { ConversationsProvider } from "./context/ConversationProvider";
+import Dashboard from "./components/Dashboard";
+import useLocalStorage from "./hooks/useLocalStorage";
+import { useSelector } from "react-redux";
 import { selectUser } from "./Redux/Slices/authSlice";
-
+import { useEffect, useState } from "react";
 function App() {
-	const { user } = useSelector(selectUser);
-	const dispatch = useDispatch();
-	
-	useEffect(() => {
-		dispatch(getAllUsers());
-	}, []);
+	const [id, setId] = useLocalStorage("id");
 
-	return (
-		<Routes>
-			<Route path='/' element={<Login />} />
-			<Route path='/home' element={<Home user={user} />} />
-			<Route path='/register' element={<Register />} />
-		</Routes>
+	const { user } = useSelector(selectUser);
+	// useEffect(() => {
+	// 	if (user) {
+	// 		setId(user._id);
+	// 	}
+	// }, [user]);
+
+	const dashboard = (
+		<SocketProvider id={id}>
+			{/* <ConversationsProvider> */}
+			<ContactsProvider id={id}>
+				<Dashboard />
+			</ContactsProvider>
+			{/* </ConversationsProvider> */}
+		</SocketProvider>
 	);
+
+	return id ? dashboard : <Login onIdSubmit={setId} />;
 }
 
 export default App;

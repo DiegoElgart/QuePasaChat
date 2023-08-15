@@ -30,9 +30,9 @@ const io = socket(server, { cors: { "Access-Control-Allow-Origin": "*", origin: 
 io.on("connection", socket => {
 	//console.log(`User Connected: ${socket.id}`);
 
-	socket.on("send_message", data => {
+	socket.on("send-message", data => {
 		console.log(data);
 		const room = socket.join(data.senderId);
-		socket.to(room).emit("receive_message", data);
+		socket.to(room).emit("receive-message", data);
 	});
 });

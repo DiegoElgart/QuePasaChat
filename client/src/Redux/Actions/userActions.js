@@ -1,11 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import useLocalStorage from "../../hooks/useLocalStorage";
 const AUTH_URL = "http://localhost:4000/auth";
 
 export const login = createAsyncThunk("auth/login", async loginData => {
 	const response = await axios.post(`${AUTH_URL}/login`, loginData);
 	localStorage.setItem("accessToken", response.data.token);
+
 	return response.data;
 });
 
