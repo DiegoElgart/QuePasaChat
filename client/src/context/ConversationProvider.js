@@ -1,7 +1,10 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { useContacts } from "./ContactsProvider";
+import { selectUser } from "../Redux/Slices/authSlice";
+
 import { useSocket } from "./SocketProvider";
+import { useSelector } from "react-redux";
 
 const ConversationsContext = React.createContext();
 
@@ -9,10 +12,12 @@ export function useConversations() {
 	return useContext(ConversationsContext);
 }
 
-export function ConversationsProvider({ id, children }) {
-	const [conversations, setConversations] = useLocalStorage("conversations", []);
+export function ConversationsProvider({ children }) {
+	const { user } = useSelector(selectUser);
+	const id = user._id;
+	const [contacts, setContacts] = useState(user.contacts);
+	const [conversations, setConversations] = useState([]);
 	const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
-	const { contacts } = useContacts();
 	const socket = useSocket();
 
 	function createConversation(recipients) {
@@ -65,19 +70,19 @@ export function ConversationsProvider({ id, children }) {
 	const formattedConversations = conversations.map((conversation, index) => {
 		const recipients = conversation.recipients.map(recipient => {
 			const contact = contacts.find(contact => {
-				return contact.id === recipient;
+				return contact._id === recipient;
 			});
-			const name = (contact && contact.name) || recipient;
-			return { id: recipient, name };
+			const username = (contact && contact.username) || recipient;
+			return { _id: recipient, username };
 		});
 
 		const messages = conversation.messages.map(message => {
 			const contact = contacts.find(contact => {
-				return contact.id === message.sender;
+				return contact._id === message.sender;
 			});
-			const name = (contact && contact.name) || message.sender;
+			const username = (contact && contact.username) || message.sender;
 			const fromMe = id === message.sender;
-			return { ...message, senderName: name, fromMe };
+			return { ...message, senderUsername: username, fromMe };
 		});
 
 		const selected = index === selectedConversationIndex;

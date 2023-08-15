@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllUsers, login, logout, register, updateUser } from "../Actions/userActions";
+import { getAllUsers, login, logout, register, addContactToUser } from "../Actions/userActions";
 
 const initialState = {
 	user: {},
@@ -54,11 +54,11 @@ const authSlice = createSlice({
 			.addCase(getAllUsers.rejected, (state, action) => {
 				state.error = action.payload;
 			})
-			.addCase(updateUser.fulfilled, (state, action) => {
+			.addCase(addContactToUser.fulfilled, (state, action) => {
 				state.user = action.payload;
 				state.error = false;
 			})
-			.addCase(updateUser.rejected, (state, action) => {
+			.addCase(addContactToUser.rejected, (state, action) => {
 				state.error = action.payload;
 			});
 	},
@@ -66,7 +66,7 @@ const authSlice = createSlice({
 
 export const selectUser = state => state.auth.user;
 export const selectUserStatus = state => state.auth.status;
-export const selectUserContacts = state => state.auth.user;
+export const selectUserContacts = state => state.auth.user.user.contacts;
 export const selectUserError = state => state.auth.error;
 export const selectAllUsers = state => state.auth.users;
 export default authSlice.reducer;

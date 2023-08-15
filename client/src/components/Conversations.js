@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { selectChat } from "../Redux/Slices/chatSlice";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { ListGroup } from "react-bootstrap";
+import { useConversations } from "../context/ConversationProvider";
 
-const Conversations = () => {
-	const dispatch = useDispatch();
-	const { chats } = useSelector(selectChat);
-	const [conversations, setConversations] = useState([]);
-	useEffect(() => {
-		if (chats) {
-			setConversations(chats);
-		}
-	}, [chats]);
+export default function Conversations() {
+	const { conversations, selectConversationIndex } = useConversations();
+
 	return (
-		<div>
-			<h3>Conversations</h3>
-		</div>
+		<ListGroup variant='flush'>
+			{conversations.map((conversation, index) => (
+				<ListGroup.Item key={index} action onClick={() => selectConversationIndex(index)} active={conversation.selected}>
+					{conversation.recipients.map(r => r.username).join(", ")}
+				</ListGroup.Item>
+			))}
+		</ListGroup>
 	);
-};
-
-export default Conversations;
+}
