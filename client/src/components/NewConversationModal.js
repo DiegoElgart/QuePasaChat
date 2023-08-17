@@ -13,7 +13,7 @@ export default function NewConversationModal({ closeModal }) {
 
 	function handleSubmit(e) {
 		e.preventDefault();
-		createConversation(selectedContactIds);
+		//createConversation(selectedContactIds);
 		dispatchCreateConversationAPI(selectedContactIds);
 
 		closeModal();

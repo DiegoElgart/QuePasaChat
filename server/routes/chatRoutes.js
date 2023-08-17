@@ -13,9 +13,11 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-	const { recipients } = req.body;
+	const { recipients, currId } = req.body;
 	try {
-		const chat = await Chat.create({ recipients: recipients });
+		const chat = await (await Chat.create({ recipients: recipients })).populate("recipients", "username");
+		await User.findByIdAndUpdate(currId, { $addToSet: { chats: chat._id } });
+
 		res.status(200).send(chat);
 	} catch (err) {
 		res.status(400).send(err.message);

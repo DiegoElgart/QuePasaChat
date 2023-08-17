@@ -13,6 +13,7 @@ const userSchema = new Schema(
 			default: false,
 		},
 		contacts: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+		chats: [{ type: mongoose.Schema.Types.ObjectId, ref: "chat" }],
 	},
 	{ timestamps: true, versionKey: false }
 );

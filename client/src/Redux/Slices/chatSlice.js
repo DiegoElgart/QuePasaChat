@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createConversationAPI, addMessageToConversationAPI } from "../Actions/chatActions";
+import { createConversationAPI, addMessageToConversationAPI, getAllConversationsAPI } from "../Actions/chatActions";
 
 const initialState = {
 	conversations: [],
@@ -23,13 +23,18 @@ const chatSlice = createSlice({
 			})
 			.addCase(createConversationAPI.rejected, (state, action) => {
 				state.error = action.payload;
-			}).addCase(addMessageToConversationAPI.fulfilled,(state,action)=>{
-				
 			})
+			.addCase(addMessageToConversationAPI.fulfilled, (state, action) => {})
+			.addCase(getAllConversationsAPI.fulfilled, (state, action) => {
+				state.chats = action.payload;
+			})
+			.addCase(getAllConversationsAPI.rejected, (state, action) => {
+				state.error = action.payload;
+			});
 	},
 });
 
 export const selectChat = state => state.chat;
-export const selectConversation = state => state.chat.conversations;
+export const selectConversation = state => state.chat;
 
 export default chatSlice.reducer;

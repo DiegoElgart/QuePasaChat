@@ -7,11 +7,17 @@ import Dashboard from "./components/Dashboard";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "./Redux/Slices/authSlice";
+import { useEffect } from "react";
+import { getAllConversationsAPI } from "./Redux/Actions/chatActions";
 
 function App() {
 	const [id, setId] = useLocalStorage("id");
 	const dispatch = useDispatch();
 	const { user } = useSelector(selectUser);
+
+	useEffect(() => {
+		dispatch(getAllConversationsAPI());
+	}, []);
 
 	const dashboard = (
 		<SocketProvider id={id}>

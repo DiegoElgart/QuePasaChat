@@ -28,9 +28,9 @@ export function ConversationsProvider({ children }) {
 		setContacts(user.contacts);
 	}, [user]);
 
-	// useEffect(() => {
-	// 	setConversations(conversationsAPI);
-	// }, [conversationsAPI]);
+	useEffect(() => {
+		setConversations(conversationsAPI);
+	}, [conversationsAPI]);
 
 	function createConversation(recipients) {
 		setConversations(prevConversations => {
@@ -85,10 +85,10 @@ export function ConversationsProvider({ children }) {
 
 	const formattedConversations = conversations.map((conversation, index) => {
 		const recipients = conversation.recipients.map(recipient => {
-			const contact = contacts.find(contact => {
-				return contact._id === recipient;
-			});
-			const username = (contact && contact.username) || recipient;
+			// const contact = contacts.find(contact => {
+			// 	return contact._id === recipient;
+			// });
+			const username = recipient.username || recipient;
 			return { _id: recipient, username };
 		});
 
@@ -100,7 +100,6 @@ export function ConversationsProvider({ children }) {
 			const fromMe = id === message.sender;
 			return { ...message, senderUsername: username, fromMe };
 		});
-
 		const selected = index === selectedConversationIndex;
 		return { ...conversation, messages, recipients, selected };
 	});
