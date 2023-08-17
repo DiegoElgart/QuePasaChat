@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 import { useContacts } from "../context/ContactsProvider";
 import { useConversations } from "../context/ConversationProvider";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../Redux/Slices/authSlice";
+import { createConversationAPI } from "../Redux/Actions/chatActions";
 
 export default function NewConversationModal({ closeModal }) {
 	const [selectedContactIds, setSelectedContactIds] = useState([]);
 	const { user } = useSelector(selectUser);
 	const { createConversation } = useConversations();
-
+	const dispatch = useDispatch();
 	function handleSubmit(e) {
 		e.preventDefault();
-
 		createConversation(selectedContactIds);
 		closeModal();
 	}

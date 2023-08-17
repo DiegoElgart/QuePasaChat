@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createChat } from "../Actions/chatActions";
+import { createConversationAPI } from "../Actions/chatActions";
 
 const initialState = {
-	chats: {},
+	conversations: [],
 	isGroup: false,
 	error: null,
 };
@@ -11,16 +11,18 @@ const chatSlice = createSlice({
 	name: "chat",
 	initialState,
 	reducers: {
-		createChat: (state, action) => {
-			state.chats = action.payload;
+		createConversationAPI: (state, action) => {
+			const { recipients, id } = action.payload;
+			state.conversations.push({ id, recipients, messages: [] });
 		},
 	},
 	extraReducers(builder) {
 		builder
-			.addCase(createChat.fulfilled, (state, action) => {
-				state.chats = action.payload;
+			.addCase(createConversationAPI.fulfilled, (state, action) => {
+				const { recipients } = action.payload;
+				state.conversations.push({ recipients, messages: [] });
 			})
-			.addCase(createChat.rejected, (state, action) => {
+			.addCase(createConversationAPI.rejected, (state, action) => {
 				state.error = action.payload;
 			});
 	},

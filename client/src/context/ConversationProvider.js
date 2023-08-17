@@ -4,7 +4,8 @@ import { useContacts } from "./ContactsProvider";
 import { selectUser } from "../Redux/Slices/authSlice";
 
 import { useSocket } from "./SocketProvider";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createConversationAPI } from "../Redux/Actions/chatActions";
 
 const ConversationsContext = React.createContext();
 
@@ -14,20 +15,22 @@ export function useConversations() {
 
 export function ConversationsProvider({ children }) {
 	const { user } = useSelector(selectUser);
+	const dispatch = useDispatch();
 	const id = user._id;
 	const [contacts, setContacts] = useState(user.contacts);
 	const [conversations, setConversations] = useState([]);
 	const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
 	const socket = useSocket();
 
-	function createConversation(recipients) {
+	async function createConversation(recipients) {
 		setConversations(prevConversations => {
 			return [...prevConversations, { recipients, messages: [] }];
 		});
+		await dispatch(createConversationAPI(conversations, id));
 	}
 
 	const addMessageToConversation = useCallback(
-		({ recipients, text, sender }) => {
+		async ({ recipients, text, sender }) => {
 			setConversations(prevConversations => {
 				let madeChange = false;
 				const newMessage = { sender, text };
