@@ -3,6 +3,7 @@ import { getAllUsers, login, logout, register, addContactToUser } from "../Actio
 
 const initialState = {
 	user: {},
+	contacts: [],
 	users: [],
 	status: "idle",
 	error: null,
@@ -25,6 +26,7 @@ const authSlice = createSlice({
 				state.status = "succeeded";
 				state.error = false;
 				state.user = action.payload;
+				state.contacts = action.payload.user.contacts;
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.status = "failed";
@@ -55,7 +57,8 @@ const authSlice = createSlice({
 				state.error = action.payload;
 			})
 			.addCase(addContactToUser.fulfilled, (state, action) => {
-				state.user = action.payload;
+				state.contacts.push(action.payload);
+				state.user = { ...state.user, contacts: [...state.user.user.contacts, action.payload] };
 				state.error = false;
 			})
 			.addCase(addContactToUser.rejected, (state, action) => {
@@ -66,7 +69,7 @@ const authSlice = createSlice({
 
 export const selectUser = state => state.auth.user;
 export const selectUserStatus = state => state.auth.status;
-export const selectUserContacts = state => state.auth.user.user.contacts;
+export const selectUserContacts = state => state.auth.contacts;
 export const selectUserError = state => state.auth.error;
 export const selectAllUsers = state => state.auth.users;
 export default authSlice.reducer;

@@ -23,8 +23,6 @@ const Register = ({ setIsOpen, onIdSubmit }) => {
 
 	useEffect(() => {
 		if (user && error === false) {
-			// const id = user.user._id;
-			// onIdSubmit(id);
 		} else if (error) {
 			alert("email already registered!");
 		}
@@ -33,7 +31,7 @@ const Register = ({ setIsOpen, onIdSubmit }) => {
 	const handleSubmit = e => {
 		e.preventDefault();
 		dispatch(register(registerData));
-		//alert("Congratulations!");
+		alert("Congratulations!");
 		setIsOpen(false);
 	};
 	return (

@@ -6,6 +6,7 @@ import { selectUser } from "../Redux/Slices/authSlice";
 import { useSocket } from "./SocketProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { createConversationAPI } from "../Redux/Actions/chatActions";
+import { selectConversation } from "../Redux/Slices/chatSlice";
 
 const ConversationsContext = React.createContext();
 
@@ -15,18 +16,30 @@ export function useConversations() {
 
 export function ConversationsProvider({ children }) {
 	const { user } = useSelector(selectUser);
+	const { conversations: conversationsAPI } = useSelector(selectConversation);
 	const dispatch = useDispatch();
-	const id = user._id;
-	const [contacts, setContacts] = useState(user.contacts);
+	const id = localStorage.getItem("QuePasaChat-id");
+	const [contacts, setContacts] = useState([]);
 	const [conversations, setConversations] = useState([]);
 	const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
 	const socket = useSocket();
 
-	async function createConversation(recipients) {
+	useEffect(() => {
+		setContacts(user.contacts);
+	}, [user]);
+
+	// useEffect(() => {
+	// 	setConversations(conversationsAPI);
+	// }, [conversationsAPI]);
+
+	function createConversation(recipients) {
 		setConversations(prevConversations => {
 			return [...prevConversations, { recipients, messages: [] }];
 		});
-		await dispatch(createConversationAPI(conversations, id));
+	}
+
+	async function dispatchCreateConversationAPI(conversations) {
+		await dispatch(createConversationAPI(conversations));
 	}
 
 	const addMessageToConversation = useCallback(
@@ -98,6 +111,7 @@ export function ConversationsProvider({ children }) {
 		sendMessage,
 		selectConversationIndex: setSelectedConversationIndex,
 		createConversation,
+		dispatchCreateConversationAPI,
 	};
 
 	return <ConversationsContext.Provider value={value}>{children}</ConversationsContext.Provider>;

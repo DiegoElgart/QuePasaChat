@@ -91,7 +91,7 @@ router.post("/:id/contacts", async (req, res) => {
 			otherUser.contacts.push(new mongoose.Types.ObjectId(id));
 			otherUser.save();
 		}
-		return res.status(200).send(thisUser);
+		return res.status(200).send({ _id: otherUser._id, username: otherUser.username });
 	} catch (err) {
 		return res.status(500).send(err.message);
 	}

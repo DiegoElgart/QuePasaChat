@@ -13,11 +13,12 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+	const { recipients } = req.body;
 	try {
-		console.log(req.body);
-		res.send(req.body);
+		const chat = await Chat.create({ recipients: recipients });
+		res.status(200).send(chat);
 	} catch (err) {
-		res.status.status(400).send(err.message);
+		res.status(400).send(err.message);
 	}
 });
 

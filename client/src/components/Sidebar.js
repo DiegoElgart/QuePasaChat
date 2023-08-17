@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tab, Nav, Button, Modal } from "react-bootstrap";
 import Conversations from "./Conversations";
 import Contacts from "./Contacts";
@@ -14,10 +14,16 @@ const CONTACTS_KEY = "contacts";
 export default function Sidebar({ id }) {
 	const [activeKey, setActiveKey] = useState(CONVERSATIONS_KEY);
 	const [modalOpen, setModalOpen] = useState(false);
+	const [username, setUsername] = useState("");
 	const conversationsOpen = activeKey === CONVERSATIONS_KEY;
 	const { user } = useSelector(selectUser);
 	const dispatch = useDispatch();
 
+	useEffect(() => {
+		if (user) {
+			setUsername(user.username);
+		}
+	}, []);
 	function closeModal() {
 		setModalOpen(false);
 	}
@@ -49,7 +55,7 @@ export default function Sidebar({ id }) {
 					</Tab.Pane>
 				</Tab.Content>
 				<div className='p-2 border-top border-right '>
-					You're : <span className='text-muted'>{user.username}</span>
+					You're : <span className='text-muted'>{username}</span>
 				</div>
 				<Button onClick={() => setModalOpen(true)} className='rounded-0'>
 					New {conversationsOpen ? "Conversation" : "Contact"}

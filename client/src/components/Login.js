@@ -48,8 +48,8 @@ const Login = ({ onIdSubmit }) => {
 					<Button type='submit' className='mr-2'>
 						Login
 					</Button>
-					<Button onClick={() => setIsOpen(!isOpen)} variant='secondary'>
-						Create A New Id
+					<Button onClick={() => setIsOpen(!isOpen)} variant='secondary' className='m-2'>
+						Create A User
 					</Button>
 				</Form>
 			)}

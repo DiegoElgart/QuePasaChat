@@ -2,6 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const AUTH_URL = "http://localhost:4000/auth";
 
+const currId = localStorage.getItem("QuePasaChat-id");
+
 export const login = createAsyncThunk("auth/login", async loginData => {
 	const response = await axios.post(`${AUTH_URL}/login`, loginData);
 	localStorage.setItem("accessToken", response.data.token);
@@ -26,7 +28,7 @@ export const getAllUsers = createAsyncThunk("user/getAllUsers", async () => {
 	return response.data;
 });
 
-export const addContactToUser = createAsyncThunk("user/update", async request => {
-	const response = await axios.post(`${AUTH_URL}/${request.id}/contacts`, { contactId: request.contactId });
+export const addContactToUser = createAsyncThunk("user/update", async contactId => {
+	const response = await axios.post(`${AUTH_URL}/${currId}/contacts`, { contactId });
 	return response.data;
 });

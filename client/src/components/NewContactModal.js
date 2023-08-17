@@ -1,24 +1,24 @@
 import React, { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
-import { useContacts } from "../context/ContactsProvider";
-import { useSelector } from "react-redux";
-import { selectAllUsers, selectUserContacts } from "../Redux/Slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAllUsers } from "../Redux/Slices/authSlice";
+import { addContactToUser } from "../Redux/Actions/userActions";
 
 export default function NewContactModal({ closeModal }) {
 	const [id, setId] = useState("");
 	const [username, setUsername] = useState("");
-	const contacts = useSelector(selectAllUsers);
-	const { createContact } = useContacts();
+	const users = useSelector(selectAllUsers);
+	const dispatch = useDispatch();
 	function handleSubmit(e) {
 		e.preventDefault();
 
-		createContact(id, username);
+		dispatch(addContactToUser(id));
 		closeModal();
 	}
 	const handleSelect = e => {
 		e.preventDefault();
 		const newContactId = e.target.value;
-		const newContactObject = contacts.find(c => c._id === newContactId);
+		const newContactObject = users.find(user => user._id === newContactId);
 		const newContactUsername = Object.values(newContactObject)[1];
 		setId(newContactId);
 		setUsername(newContactUsername);
@@ -30,9 +30,9 @@ export default function NewContactModal({ closeModal }) {
 				<Form onSubmit={handleSubmit} className='p-3'>
 					<Form.Select onChange={handleSelect} className='m-3'>
 						<option>--------------</option>
-						{contacts.map(contact => (
-							<option key={contact._id} value={contact._id}>
-								{contact.username}
+						{users.map(user => (
+							<option key={user._id} value={user._id}>
+								{user.username}
 							</option>
 						))}
 					</Form.Select>

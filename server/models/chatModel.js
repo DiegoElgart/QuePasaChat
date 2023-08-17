@@ -4,7 +4,7 @@ const chatSchema = new Schema(
 	{
 		chatName: { type: String, trim: true },
 		isGroupChat: { type: Boolean, default: false },
-		users: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+		recipients: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
 		messages: [
 			{
 				sender: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
