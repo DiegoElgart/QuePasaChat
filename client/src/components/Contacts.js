@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ListGroup } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { selectUser, selectUserContacts } from "../Redux/Slices/authSlice";
+import { selectUserContacts } from "../Redux/Slices/authSlice";
 
 export default function Contacts() {
-	const { user } = useSelector(selectUser);
 	const contacts = useSelector(selectUserContacts);
-
 
 	return (
 		<ListGroup variant='flush'>

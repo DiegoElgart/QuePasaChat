@@ -1,11 +1,9 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
-import useLocalStorage from "../hooks/useLocalStorage";
-import { useContacts } from "./ContactsProvider";
 import { selectUser } from "../Redux/Slices/authSlice";
 
 import { useSocket } from "./SocketProvider";
 import { useDispatch, useSelector } from "react-redux";
-import { createConversationAPI } from "../Redux/Actions/chatActions";
+import { addMessageToConversationAPI, createConversationAPI, getAllUserConversationsAPI } from "../Redux/Actions/chatActions";
 import { selectConversation } from "../Redux/Slices/chatSlice";
 
 const ConversationsContext = React.createContext();
@@ -30,20 +28,20 @@ export function ConversationsProvider({ children }) {
 
 	useEffect(() => {
 		setConversations(conversationsAPI);
-	}, [conversationsAPI]);
+	}, [conversationsAPI, socket]);
 
-	function createConversation(recipients) {
-		setConversations(prevConversations => {
-			return [...prevConversations, { recipients, messages: [] }];
-		});
-	}
+	// function createConversation(recipients) {
+	// 	setConversations(prevConversations => {
+	// 		return [...prevConversations, { recipients, messages: [] }];
+	// 	});
+	// }
 
 	async function dispatchCreateConversationAPI(conversations) {
 		await dispatch(createConversationAPI(conversations));
 	}
 
 	const addMessageToConversation = useCallback(
-		async ({ recipients, text, sender }) => {
+		({ recipients, text, sender }) => {
 			setConversations(prevConversations => {
 				let madeChange = false;
 				const newMessage = { sender, text };
@@ -71,16 +69,34 @@ export function ConversationsProvider({ children }) {
 
 	useEffect(() => {
 		if (socket == null) return;
-
-		socket.on("receive-message", addMessageToConversation);
+		socket.on("receive-message", data => {
+			dispatch(addMessageToConversationAPI({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id }));
+			//	addMessageToConversation({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id });
+			console.log(data);
+			//			dispatch(getAllUserConversationsAPI(id));
+		});
 
 		return () => socket.off("receive-message");
-	}, [socket, addMessageToConversation]);
+	}, [socket, dispatch]);
 
-	function sendMessage(recipients, text) {
-		socket.emit("send-message", { recipients, text });
+	// useCallback(() => {
+	// 	if (socket == null) return;
+	// 	socket.on("receive-message", data => {
+	// 		dispatch(addMessageToConversationAPI({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id }));
+	// 		addMessageToConversation({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id });
+	// 		console.log(id);
+	// 		//dispatch(getAllUserConversationsAPI(id));
+	// 		//setConversations(conversationsAPI);
+	// 	});
 
-		addMessageToConversation({ recipients, text, sender: id });
+	// 	return () => socket.off("receive-message");
+	// }, [socket, dispatch, addMessageToConversation]);
+
+	function sendMessage(recipients, text, conversationId) {
+		socket.emit("send-message", { recipients, text, conversationId });
+		//addMessageToConversation({ recipients, text, sender: id });
+
+		dispatch(addMessageToConversationAPI({ recipients, text, sender: id, conversationId }));
 	}
 
 	const formattedConversations = conversations.map((conversation, index) => {
@@ -92,12 +108,15 @@ export function ConversationsProvider({ children }) {
 			return { _id: recipient, username };
 		});
 
+		console.log(conversation.messages);
 		const messages = conversation.messages.map(message => {
 			const contact = contacts.find(contact => {
 				return contact._id === message.sender;
 			});
 			const username = (contact && contact.username) || message.sender;
+			//console.log(username);
 			const fromMe = id === message.sender;
+			//console.log(fromMe);
 			return { ...message, senderUsername: username, fromMe };
 		});
 		const selected = index === selectedConversationIndex;
@@ -109,7 +128,7 @@ export function ConversationsProvider({ children }) {
 		selectedConversation: formattedConversations[selectedConversationIndex],
 		sendMessage,
 		selectConversationIndex: setSelectedConversationIndex,
-		createConversation,
+		//createConversation,
 		dispatchCreateConversationAPI,
 	};
 

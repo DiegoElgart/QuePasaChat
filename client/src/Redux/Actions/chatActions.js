@@ -9,9 +9,13 @@ export const createConversationAPI = createAsyncThunk("chat/createConversation",
 	return response.data;
 });
 
-export const addMessageToConversationAPI = createAsyncThunk("chat/addMessageToConversationAPI", async ({ recipients, text, sender }) => {});
+export const addMessageToConversationAPI = createAsyncThunk("chat/addMessageToConversationAPI", async ({ recipients, text, sender, conversationId }) => {
+	const response = await axios.post(`${CHAT_URL}/${conversationId}`, { recipients, sender, text });
+	//console.log(recipients, text, sender, conversationId);
+	return response.data;
+});
 
-export const getAllConversationsAPI = createAsyncThunk("chat/getAllConversationsAPI", async () => {
-	const response = await axios.get(CHAT_URL);
+export const getAllUserConversationsAPI = createAsyncThunk("chat/getAllUserConversationsAPI", async userId => {
+	const response = await axios.get(`${CHAT_URL}/user/${userId}`);
 	return response.data;
 });

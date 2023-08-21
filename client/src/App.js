@@ -1,30 +1,18 @@
 import "./App.css";
 import Login from "./components/Login";
 import { SocketProvider } from "./context/SocketProvider";
-import { ContactsProvider } from "./context/ContactsProvider";
 import { ConversationsProvider } from "./context/ConversationProvider";
 import Dashboard from "./components/Dashboard";
 import useLocalStorage from "./hooks/useLocalStorage";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "./Redux/Slices/authSlice";
-import { useEffect } from "react";
-import { getAllConversationsAPI } from "./Redux/Actions/chatActions";
+import { useDispatch } from "react-redux";
 
 function App() {
 	const [id, setId] = useLocalStorage("id");
-	const dispatch = useDispatch();
-	const { user } = useSelector(selectUser);
-
-	useEffect(() => {
-		dispatch(getAllConversationsAPI());
-	}, []);
 
 	const dashboard = (
 		<SocketProvider id={id}>
 			<ConversationsProvider>
-				<ContactsProvider id={id}>
-					<Dashboard />
-				</ContactsProvider>
+				<Dashboard />
 			</ConversationsProvider>
 		</SocketProvider>
 	);

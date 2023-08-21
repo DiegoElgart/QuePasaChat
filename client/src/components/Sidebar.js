@@ -16,6 +16,7 @@ export default function Sidebar({ id }) {
 	const [modalOpen, setModalOpen] = useState(false);
 	const [username, setUsername] = useState("");
 	const conversationsOpen = activeKey === CONVERSATIONS_KEY;
+
 	const { user } = useSelector(selectUser);
 	const dispatch = useDispatch();
 

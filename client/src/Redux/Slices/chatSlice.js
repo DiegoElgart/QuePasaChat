@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createConversationAPI, addMessageToConversationAPI, getAllConversationsAPI } from "../Actions/chatActions";
+import { createConversationAPI, addMessageToConversationAPI, getAllUserConversationsAPI } from "../Actions/chatActions";
 
 const initialState = {
 	conversations: [],
-	selectedConversationIndex: 0,
+	selectConversationIndex: 0,
 	error: null,
 };
 
@@ -24,11 +24,26 @@ const chatSlice = createSlice({
 			.addCase(createConversationAPI.rejected, (state, action) => {
 				state.error = action.payload;
 			})
-			.addCase(addMessageToConversationAPI.fulfilled, (state, action) => {})
-			.addCase(getAllConversationsAPI.fulfilled, (state, action) => {
-				state.chats = action.payload;
+			.addCase(addMessageToConversationAPI.fulfilled, (state, action) => {
+				const { _id, messages } = action.payload;
+
+				//console.log(action.payload);
+
+				const existingConversationIndex = state.conversations.findIndex(conversation => conversation._id === _id);
+				if (existingConversationIndex !== -1) {
+					state.conversations[existingConversationIndex].messages.push(messages);
+
+					// Update the existing conversation with the new message
+				} else {
+					// Create a new conversation
+					createConversationAPI(action.payload);
+				}
 			})
-			.addCase(getAllConversationsAPI.rejected, (state, action) => {
+
+			.addCase(getAllUserConversationsAPI.fulfilled, (state, action) => {
+				state.conversations = action.payload;
+			})
+			.addCase(getAllUserConversationsAPI.rejected, (state, action) => {
 				state.error = action.payload;
 			});
 	},

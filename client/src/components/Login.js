@@ -5,6 +5,7 @@ import { Container, Form, Button } from "react-bootstrap";
 import { login } from "../Redux/Actions/userActions";
 import { selectUser, selectUserError, selectUserStatus } from "../Redux/Slices/authSlice";
 import Register from "./Register";
+import { getAllUserConversationsAPI } from "../Redux/Actions/chatActions";
 
 const Login = ({ onIdSubmit }) => {
 	const user = useSelector(selectUser);
@@ -24,16 +25,18 @@ const Login = ({ onIdSubmit }) => {
 
 	useEffect(() => {
 		if (user && error === false && status === "succeeded") {
-			//const id = user.user._id;
-			//onIdSubmit(id);
+			dispatch(getAllUserConversationsAPI(user._id));
 		} else if (error) {
 			alert("Wrong Password or Email");
 		}
 	}, [user, error]);
 
-	const handleSubmit = e => {
+	const handleSubmit = async e => {
 		e.preventDefault();
-		dispatch(login(loginData));
+		const response = await dispatch(login(loginData));
+		if (response.payload.user) {
+			await dispatch(getAllUserConversationsAPI(response.payload.user._id));
+		}
 	};
 	return (
 		<Container className='align-items-center d-flex' style={{ height: "100vh" }}>

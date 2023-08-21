@@ -2,18 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const chatSchema = new Schema(
 	{
-		chatName: { type: String, trim: true },
 		isGroupChat: { type: Boolean, default: false },
 		recipients: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
 		messages: [
 			{
 				sender: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-				content: { type: String, trim: true },
-				receiver: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+				text: { type: String, trim: true },
 				createdAt: { type: Date, default: Date.now },
 			},
 		],
-		groupAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 	},
 	{ timestamps: true, versionKey: false }
 );
