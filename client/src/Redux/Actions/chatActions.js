@@ -5,13 +5,14 @@ const CHAT_URL = "http://localhost:4000/chat";
 
 export const createConversationAPI = createAsyncThunk("chat/createConversation", async recipients => {
 	const currId = localStorage.getItem("QuePasaChat-id");
-	const response = await axios.post(`${CHAT_URL}`, { recipients, currId });
+	const finalRecipients = [...recipients, currId];
+
+	const response = await axios.post(`${CHAT_URL}`, { finalRecipients, currId });
 	return response.data;
 });
 
 export const addMessageToConversationAPI = createAsyncThunk("chat/addMessageToConversationAPI", async ({ recipients, text, sender, conversationId }) => {
 	const response = await axios.post(`${CHAT_URL}/${conversationId}`, { recipients, sender, text });
-	//console.log(recipients, text, sender, conversationId);
 	return response.data;
 });
 

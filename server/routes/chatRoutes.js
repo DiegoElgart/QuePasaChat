@@ -61,12 +61,13 @@ router.get("/user/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-	const { recipients, currId } = req.body;
+	const { finalRecipients, currId } = req.body;
+
 	try {
-		const chat = await (await Chat.create({ recipients: recipients })).populate("recipients", "username");
+		const chat = await (await Chat.create({ recipients: finalRecipients })).populate("recipients", "username");
 		await User.findByIdAndUpdate(currId, { $addToSet: { chats: chat._id } });
 
-		await recipients.map(async recipient => await User.findByIdAndUpdate(recipient, { $addToSet: { chats: chat._id } }));
+		await finalRecipients.map(async recipient => await User.findByIdAndUpdate(recipient, { $addToSet: { chats: chat._id } }));
 
 		res.status(200).send(chat);
 	} catch (err) {

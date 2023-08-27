@@ -30,6 +30,7 @@ const io = socket(server, { cors: { "Access-Control-Allow-Origin": "*", origin: 
 io.on("connection", socket => {
 	const id = socket.handshake.query.id;
 	socket.join(id);
+
 	socket.on("send-message", ({ recipients, text, conversationId }) => {
 		recipients.forEach(recipient => {
 			const newRecipients = recipients.filter(r => r !== recipient);

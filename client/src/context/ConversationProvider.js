@@ -71,31 +71,15 @@ export function ConversationsProvider({ children }) {
 		if (socket == null) return;
 		socket.on("receive-message", data => {
 			dispatch(addMessageToConversationAPI({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id }));
-			//	addMessageToConversation({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id });
-			console.log(data);
-			//			dispatch(getAllUserConversationsAPI(id));
 		});
 
 		return () => socket.off("receive-message");
 	}, [socket, dispatch]);
 
-	// useCallback(() => {
-	// 	if (socket == null) return;
-	// 	socket.on("receive-message", data => {
-	// 		dispatch(addMessageToConversationAPI({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id }));
-	// 		addMessageToConversation({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id });
-	// 		console.log(id);
-	// 		//dispatch(getAllUserConversationsAPI(id));
-	// 		//setConversations(conversationsAPI);
-	// 	});
-
-	// 	return () => socket.off("receive-message");
-	// }, [socket, dispatch, addMessageToConversation]);
-
 	function sendMessage(recipients, text, conversationId) {
 		socket.emit("send-message", { recipients, text, conversationId });
 		//addMessageToConversation({ recipients, text, sender: id });
-
+		//console.log(recipients);
 		dispatch(addMessageToConversationAPI({ recipients, text, sender: id, conversationId }));
 	}
 
@@ -108,7 +92,7 @@ export function ConversationsProvider({ children }) {
 			return { _id: recipient, username };
 		});
 
-		console.log(conversation.messages);
+		//console.log(conversation.messages);
 		const messages = conversation.messages.map(message => {
 			const contact = contacts.find(contact => {
 				return contact._id === message.sender;
@@ -128,7 +112,6 @@ export function ConversationsProvider({ children }) {
 		selectedConversation: formattedConversations[selectedConversationIndex],
 		sendMessage,
 		selectConversationIndex: setSelectedConversationIndex,
-		//createConversation,
 		dispatchCreateConversationAPI,
 	};
 
