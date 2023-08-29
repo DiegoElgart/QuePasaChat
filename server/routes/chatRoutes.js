@@ -23,8 +23,8 @@ router.get("/:id", async (req, res) => {
 
 router.post("/:id", async (req, res) => {
 	const { id } = req.params;
-	const { sender, text } = req.body;
-
+	const { sender, text, recipients } = req.body;
+	console.log("reci", recipients);
 	try {
 		// Find the chat by ID
 		const chat = await Chat.findById(id);
@@ -35,6 +35,7 @@ router.post("/:id", async (req, res) => {
 
 		// Add the new message to the messages array
 		chat.messages.push({
+			recipients,
 			sender,
 			text,
 			createdAt: new Date(),

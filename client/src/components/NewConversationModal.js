@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 //import { useContacts } from "../context/ContactsProvider";
 import { useConversations } from "../context/ConversationProvider";
@@ -9,7 +9,6 @@ export default function NewConversationModal({ closeModal }) {
 	const [selectedContactIds, setSelectedContactIds] = useState([]);
 	const { user } = useSelector(selectUser);
 	const { dispatchCreateConversationAPI } = useConversations();
-
 	function handleSubmit(e) {
 		e.preventDefault();
 		//createConversation(selectedContactIds);

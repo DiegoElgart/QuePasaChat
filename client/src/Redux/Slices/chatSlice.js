@@ -26,7 +26,7 @@ const chatSlice = createSlice({
 			})
 			.addCase(addMessageToConversationAPI.fulfilled, (state, action) => {
 				const { _id, messages } = action.payload;
-
+				//console.log(action.payload);
 				const existingConversationIndex = state.conversations.findIndex(conversation => conversation._id === _id);
 				if (existingConversationIndex !== -1) {
 					state.conversations[existingConversationIndex].messages.push(messages[messages.length - 1]);

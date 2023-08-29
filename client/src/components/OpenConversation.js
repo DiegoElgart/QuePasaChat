@@ -13,8 +13,10 @@ export default function OpenConversation() {
 	const { sendMessage, selectedConversation } = useConversations();
 	function handleSubmit(e) {
 		e.preventDefault();
+		//console.log(selectedConversation);
 		sendMessage(
-			selectedConversation.recipients.map(r => r._id),
+			//selectedConversation.recipients.map(r => r._id),
+			selectedConversation.recipients,
 			text,
 			selectedConversation._id
 		);

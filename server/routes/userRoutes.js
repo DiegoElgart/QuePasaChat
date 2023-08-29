@@ -75,6 +75,7 @@ router.post("/:id", async (req, res) => {
 router.post("/:id/contacts", async (req, res) => {
 	const { id } = req.params;
 	const { contactId } = req.body;
+
 	try {
 		let thisUser = await User.findById(id);
 		if (thisUser.contacts.includes(contactId)) {
@@ -85,9 +86,7 @@ router.post("/:id/contacts", async (req, res) => {
 		}
 
 		let otherUser = await User.findById(contactId);
-		if (otherUser.contacts.includes(id)) {
-			return res.status(400).send("Users Already are contacts");
-		} else {
+		if (!otherUser.contacts.includes(id)) {
 			otherUser.contacts.push(new mongoose.Types.ObjectId(id));
 			otherUser.save();
 		}

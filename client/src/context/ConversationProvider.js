@@ -30,42 +30,9 @@ export function ConversationsProvider({ children }) {
 		setConversations(conversationsAPI);
 	}, [conversationsAPI, socket]);
 
-	// function createConversation(recipients) {
-	// 	setConversations(prevConversations => {
-	// 		return [...prevConversations, { recipients, messages: [] }];
-	// 	});
-	// }
-
 	async function dispatchCreateConversationAPI(conversations) {
 		await dispatch(createConversationAPI(conversations));
 	}
-
-	const addMessageToConversation = useCallback(
-		({ recipients, text, sender }) => {
-			setConversations(prevConversations => {
-				let madeChange = false;
-				const newMessage = { sender, text };
-				const newConversations = prevConversations.map(conversation => {
-					if (arrayEquality(conversation.recipients, recipients)) {
-						madeChange = true;
-						return {
-							...conversation,
-							messages: [...conversation.messages, newMessage],
-						};
-					}
-
-					return conversation;
-				});
-
-				if (madeChange) {
-					return newConversations;
-				} else {
-					return [...prevConversations, { recipients, messages: [newMessage] }];
-				}
-			});
-		},
-		[setConversations]
-	);
 
 	useEffect(() => {
 		if (socket == null) return;
@@ -77,22 +44,21 @@ export function ConversationsProvider({ children }) {
 	}, [socket, dispatch]);
 
 	function sendMessage(recipients, text, conversationId) {
-		socket.emit("send-message", { recipients, text, conversationId });
-		//addMessageToConversation({ recipients, text, sender: id });
 		//console.log(recipients);
+		socket.emit("send-message", { recipients, text, conversationId });
 		dispatch(addMessageToConversationAPI({ recipients, text, sender: id, conversationId }));
 	}
 
 	const formattedConversations = conversations.map((conversation, index) => {
-		const recipients = conversation.recipients.map(recipient => {
-			// const contact = contacts.find(contact => {
-			// 	return contact._id === recipient;
-			// });
-			const username = recipient.username || recipient;
-			return { _id: recipient, username };
-		});
+		// const recipients = conversation.recipients.map(recipient => {
+		// 	// const contact = contacts.find(contact => {
+		// 	// 	return contact._id === recipient;
+		// 	// });
+		// 	//const username = recipient.username || recipient;
+		// 	console.log(recipient);
+		// 	return recipient;
+		// });
 
-		//console.log(conversation.messages);
 		const messages = conversation.messages.map(message => {
 			const contact = contacts.find(contact => {
 				return contact._id === message.sender;
@@ -104,7 +70,7 @@ export function ConversationsProvider({ children }) {
 			return { ...message, senderUsername: username, fromMe };
 		});
 		const selected = index === selectedConversationIndex;
-		return { ...conversation, messages, recipients, selected };
+		return { ...conversation, messages, selected };
 	});
 
 	const value = {
