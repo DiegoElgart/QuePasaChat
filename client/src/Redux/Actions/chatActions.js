@@ -5,9 +5,7 @@ const CHAT_URL = "http://localhost:4000/chat";
 
 export const createConversationAPI = createAsyncThunk("chat/createConversation", async recipients => {
 	const currId = localStorage.getItem("QuePasaChat-id");
-	const finalRecipients = [...recipients, currId];
-
-	const response = await axios.post(`${CHAT_URL}`, { finalRecipients, currId });
+	const response = await axios.post(`${CHAT_URL}`, { recipients, currId });
 	return response.data;
 });
 

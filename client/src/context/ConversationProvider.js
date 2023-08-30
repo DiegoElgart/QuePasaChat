@@ -28,10 +28,12 @@ export function ConversationsProvider({ children }) {
 
 	useEffect(() => {
 		setConversations(conversationsAPI);
-	}, [conversationsAPI, socket]);
+	}, [conversationsAPI]);
 
-	async function dispatchCreateConversationAPI(conversations) {
-		await dispatch(createConversationAPI(conversations));
+	async function dispatchCreateConversationAPI(selectedContactIds) {
+		const contactsForRecipients = contacts.filter(contact => selectedContactIds.includes(contact._id.toString()));
+		contactsForRecipients.push(user);
+		await dispatch(createConversationAPI(contactsForRecipients));
 	}
 
 	useEffect(() => {

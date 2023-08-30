@@ -33,14 +33,13 @@ io.on("connection", socket => {
 
 	socket.on("send-message", ({ recipients, text, conversationId }) => {
 		recipients.forEach(recipient => {
-			// const newRecipients = recipients.filter(r => r !== recipient);
+			const newRecipients = recipients.filter(r => r !== recipient);
 
 			// newRecipients.push(id);
-			// console.log(newRecipients);
 
 			socket.broadcast.to(recipient._id).emit("receive-message", {
 				_id: conversationId,
-				recipients: recipients,
+				recipients: newRecipients,
 				sender: id,
 				text,
 			});

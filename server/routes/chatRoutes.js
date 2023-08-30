@@ -23,26 +23,26 @@ router.get("/:id", async (req, res) => {
 
 router.post("/:id", async (req, res) => {
 	const { id } = req.params;
-	const { sender, text, recipients } = req.body;
-	console.log("reci", recipients);
+	const { sender, text } = req.body;
 	try {
-		// Find the chat by ID
-		const chat = await Chat.findById(id);
-
+		const chat = await Chat.findByIdAndUpdate(
+			id,
+			{
+				$push: {
+					messages: {
+						sender,
+						text,
+						createdAt: new Date(),
+					},
+				},
+			},
+			{ new: true } // This option returns the updated document
+		);
+		console.log(chat);
 		if (!chat) {
 			return res.status(404).send("Chat not found");
 		}
-
-		// Add the new message to the messages array
-		chat.messages.push({
-			recipients,
-			sender,
-			text,
-			createdAt: new Date(),
-		});
-
-		// Save the updated chat
-		await chat.save();
+		//console.log(chat);
 		res.status(200).send(chat);
 	} catch (err) {
 		res.status(400).send(err.message);
@@ -62,13 +62,12 @@ router.get("/user/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-	const { finalRecipients, currId } = req.body;
-
+	const { recipients, currId } = req.body;
 	try {
-		const chat = await (await Chat.create({ recipients: finalRecipients })).populate("recipients", "username");
+		const chat = await await Chat.create({ recipients: recipients });
 		await User.findByIdAndUpdate(currId, { $addToSet: { chats: chat._id } });
 
-		await finalRecipients.map(async recipient => await User.findByIdAndUpdate(recipient, { $addToSet: { chats: chat._id } }));
+		await recipients.map(async recipient => await User.findByIdAndUpdate(recipient._id, { $addToSet: { chats: chat._id } }));
 
 		res.status(200).send(chat);
 	} catch (err) {
