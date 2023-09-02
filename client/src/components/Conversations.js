@@ -23,6 +23,7 @@ export default function Conversations() {
 						.filter(r => r.username !== user.username) // Exclude current user's username
 						.map(r => r.username)
 						.join(", ")}
+						
 				</ListGroup.Item>
 			))}
 		</ListGroup>

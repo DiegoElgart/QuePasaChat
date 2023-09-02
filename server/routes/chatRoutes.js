@@ -38,11 +38,10 @@ router.post("/:id", async (req, res) => {
 			},
 			{ new: true } // This option returns the updated document
 		);
-		console.log(chat);
+
 		if (!chat) {
 			return res.status(404).send("Chat not found");
 		}
-		//console.log(chat);
 		res.status(200).send(chat);
 	} catch (err) {
 		res.status(400).send(err.message);

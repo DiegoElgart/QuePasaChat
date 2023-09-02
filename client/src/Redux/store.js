@@ -8,5 +8,5 @@ const logger = reduxLogger.createLogger();
 
 export const store = configureStore({
 	reducer: { auth: authReducer, chat: chatSlice },
-	middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger),
+	//middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger),
 });

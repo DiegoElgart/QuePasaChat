@@ -39,7 +39,9 @@ export function ConversationsProvider({ children }) {
 	useEffect(() => {
 		if (socket == null) return;
 		socket.on("receive-message", data => {
-			dispatch(addMessageToConversationAPI({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id }));
+			//console.log(data);
+			dispatch(getAllUserConversationsAPI(user._id));
+			//dispatch(addMessageToConversationAPI({ recipients: data.recipients, text: data.text, sender: data.sender, conversationId: data._id }));
 		});
 
 		return () => socket.off("receive-message");
