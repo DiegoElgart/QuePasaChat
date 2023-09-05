@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createConversationAPI, addMessageToConversationAPI, getAllUserConversationsAPI } from "../Actions/chatActions";
+import { createConversationAPI, addMessageToConversationAPI, getAllUserConversationsAPI, removeRecipientFromChat } from "../Actions/chatActions";
 
 const initialState = {
 	conversations: [],
@@ -26,9 +26,7 @@ const chatSlice = createSlice({
 			})
 			.addCase(addMessageToConversationAPI.fulfilled, (state, action) => {
 				const { _id, messages } = action.payload;
-				console.log(action.payload);
 				const existingConversationIndex = state.conversations.findIndex(conversation => conversation._id === _id);
-				console.log(existingConversationIndex);
 				if (existingConversationIndex !== -1) {
 					state.conversations[existingConversationIndex].messages.push(messages[messages.length - 1]);
 
@@ -45,6 +43,9 @@ const chatSlice = createSlice({
 			})
 			.addCase(getAllUserConversationsAPI.rejected, (state, action) => {
 				state.error = action.payload;
+			})
+			.addCase(removeRecipientFromChat.fulfilled, (state, action) => {
+				state.conversations = state.conversations.filter(conversation => conversation._id !== action.payload._id);
 			});
 	},
 });

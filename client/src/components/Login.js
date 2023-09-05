@@ -29,12 +29,12 @@ const Login = ({ onIdSubmit }) => {
 		} else if (error) {
 			alert("Wrong Password or Email");
 		}
-	}, [user, error]);
+	}, [user, error, status, dispatch]);
 
 	const handleSubmit = async e => {
 		e.preventDefault();
 		const response = await dispatch(login(loginData));
-		if (response.payload.user) {
+		if (response.payload && response.payload.user) {
 			await dispatch(getAllUserConversationsAPI(response.payload.user._id));
 		}
 	};

@@ -19,6 +19,9 @@ chatSchema.pre("save", function (next) {
 	if (this.messages.length > 20) {
 		this.messages = this.messages.slice(-20);
 	}
+	if (this.recipients.length > 2) {
+		this.isGroupChat = true;
+	}
 	next();
 });
 

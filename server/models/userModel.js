@@ -12,11 +12,17 @@ const userSchema = new Schema(
 			required: true,
 			default: false,
 		},
-		contacts: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+		contacts: [
+			{
+				contactId: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+				isBlocked: { type: Boolean, default: false },
+			},
+		],
 		chats: [{ type: mongoose.Schema.Types.ObjectId, ref: "chat" }],
 	},
 	{ timestamps: true, versionKey: false }
 );
+userSchema.index({ "contacts.contactId._id": 1 }, { unique: true });
 
 userSchema.pre("save", function (next) {
 	if (!this.isModified("password")) return next();

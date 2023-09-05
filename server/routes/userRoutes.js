@@ -23,8 +23,7 @@ router.get("/users", async (req, res) => {
 router.post("/login", async (req, res) => {
 	try {
 		const { email, password } = req.body;
-		let user = await User.findOne({ email: email }).populate("contacts", "username");
-
+		let user = await User.findOne({ email: email }).populate("contacts.contactId", "username");
 		if (!user) return res.status(400).send({ message: "Email not exist" });
 		let match = user.checkPassword(password);
 		if (!match) return res.status(400).send({ message: "Wrong Password!" });
@@ -53,7 +52,7 @@ router.post("/register", async (req, res) => {
 router.get("/:id", async (req, res) => {
 	const { id } = req.params;
 	try {
-		let user = await User.findById(id).populate("contacts", "username");
+		let user = await User.findById(id).populate("contacts.contactId", "username");
 
 		return res.status(200).send(user);
 	} catch (err) {
@@ -78,19 +77,17 @@ router.post("/:id/contacts", async (req, res) => {
 
 	try {
 		let thisUser = await User.findById(id);
-		if (thisUser.contacts.includes(contactId)) {
-			return res.status(400).send("Users Already are contacts");
-		} else {
-			thisUser.contacts.push(new mongoose.Types.ObjectId(contactId));
-			thisUser.save();
-		}
+		const contactExists = thisUser.contacts.find(contact => contact.contactId.toString() === contactId);
+		console.log(contactExists);
+		// const newContact = { contactId: contactId, isBlocked: false };
+		// thisUser.contacts.push(newContact);
+		// thisUser.save();
+		// let otherUser = await User.findById(contactId);
+		// otherUser.contacts.push({ contactId: id });
+		// otherUser.save();
 
-		let otherUser = await User.findById(contactId);
-		if (!otherUser.contacts.includes(id)) {
-			otherUser.contacts.push(new mongoose.Types.ObjectId(id));
-			otherUser.save();
-		}
-		return res.status(200).send({ _id: otherUser._id, username: otherUser.username });
+		const user = await User.findById(id).populate("contacts.contactId", "username");
+		return res.status(200).send(user);
 	} catch (err) {
 		return res.status(500).send(err.message);
 	}
@@ -99,6 +96,19 @@ router.post("/delete/:id", async (req, res) => {
 	try {
 		let user = await User.findByIdAndDelete(req.params.id);
 		return res.status(200).send(`User ${user.username} deleted!`);
+	} catch (err) {
+		return res.status(500).send(err.message);
+	}
+});
+
+router.post("/blockContact/:id", async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { contactId } = req.body;
+		const user = await User.findById(id);
+		user.blockedList.push(new mongoose.Types.ObjectId(contactId));
+		user.save();
+		res.status(200).send(user);
 	} catch (err) {
 		return res.status(500).send(err.message);
 	}

@@ -45,4 +45,9 @@ io.on("connection", socket => {
 			});
 		});
 	});
+	socket.on("left-conversation", recipients => {
+		recipients.forEach(recipient => {
+			socket.broadcast.to(recipient._id).emit("has-left-conversation");
+		});
+	});
 });

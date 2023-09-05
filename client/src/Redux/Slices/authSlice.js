@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllUsers, login, logout, register, addContactToUser } from "../Actions/userActions";
+import { getAllUsers, login, logout, register, addContactToUser, blockUnblockContact } from "../Actions/userActions";
 
 const initialState = {
 	user: {},
@@ -57,12 +57,17 @@ const authSlice = createSlice({
 				state.error = action.payload;
 			})
 			.addCase(addContactToUser.fulfilled, (state, action) => {
-				state.contacts.push(action.payload);
-				state.user = { ...state.user, contacts: [...state.user.user.contacts, action.payload] };
+				// state.contacts.push(action.payload);
+				// state.user = { ...state.user, contacts: [...state.user.user.contacts, action.payload] };
+				state.user.contacts = action.payload.contacts;
+				state.contacts = action.payload.contacts;
 				state.error = false;
 			})
 			.addCase(addContactToUser.rejected, (state, action) => {
 				state.error = action.payload;
+			})
+			.addCase(blockUnblockContact.fulfilled, (state, action) => {
+				console.log(action.payload);
 			});
 	},
 });

@@ -8,6 +8,7 @@ export default function NewContactModal({ closeModal }) {
 	const [id, setId] = useState("");
 	const [username, setUsername] = useState("");
 	const users = useSelector(selectAllUsers);
+	const currUser = localStorage.getItem("QuePasaChat-id");
 	const dispatch = useDispatch();
 	function handleSubmit(e) {
 		e.preventDefault();
@@ -30,11 +31,13 @@ export default function NewContactModal({ closeModal }) {
 				<Form onSubmit={handleSubmit} className='p-3'>
 					<Form.Select onChange={handleSelect} className='m-3'>
 						<option>--------------</option>
-						{users.map(user => (
-							<option key={user._id} value={user._id}>
-								{user.username}
-							</option>
-						))}
+						{users.map(user =>
+							user._id !== currUser ? (
+								<option key={user._id} value={user._id}>
+									{user.username}
+								</option>
+							) : null
+						)}
 					</Form.Select>
 					<Button type='submit'>Create</Button>
 				</Form>

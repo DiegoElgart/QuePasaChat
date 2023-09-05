@@ -11,7 +11,6 @@ export default function NewConversationModal({ closeModal }) {
 	const { dispatchCreateConversationAPI } = useConversations();
 	function handleSubmit(e) {
 		e.preventDefault();
-		//createConversation(selectedContactIds);
 		dispatchCreateConversationAPI(selectedContactIds);
 
 		closeModal();

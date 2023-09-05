@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ListGroup } from "react-bootstrap";
+import { CloseButton, ListGroup, Overlay } from "react-bootstrap";
 import { useConversations } from "../context/ConversationProvider";
 import { useSelector } from "react-redux";
 import { selectConversation } from "../Redux/Slices/chatSlice";
@@ -23,7 +23,6 @@ export default function Conversations() {
 						.filter(r => r.username !== user.username) // Exclude current user's username
 						.map(r => r.username)
 						.join(", ")}
-						
 				</ListGroup.Item>
 			))}
 		</ListGroup>

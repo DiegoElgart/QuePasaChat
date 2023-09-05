@@ -60,10 +60,31 @@ router.get("/user/:id", async (req, res) => {
 	}
 });
 
+router.post("/removeRecipient/:chatId", async (req, res) => {
+	const { currId } = req.body;
+	const { chatId } = req.params;
+	try {
+		const chat = await Chat.findById(chatId);
+		const newRecipients = chat.recipients.filter(r => r._id.toString() !== currId);
+		chat.recipients = newRecipients;
+		if (newRecipients.length <= 2) {
+			chat.isGroupChat = false;
+		}
+		chat.save();
+
+		const user = await User.findById(currId);
+		const newChats = user.chats.filter(chat => chat.toString() !== chatId);
+		user.chats = newChats;
+		user.save();
+		res.status(200).send(chat);
+	} catch (err) {
+		res.status(400).send(err.message);
+	}
+});
 router.post("/", async (req, res) => {
 	const { recipients, currId } = req.body;
 	try {
-		const chat = await await Chat.create({ recipients: recipients });
+		const chat = await Chat.create({ recipients: recipients });
 		await User.findByIdAndUpdate(currId, { $addToSet: { chats: chat._id } });
 
 		await recipients.map(async recipient => await User.findByIdAndUpdate(recipient._id, { $addToSet: { chats: chat._id } }));

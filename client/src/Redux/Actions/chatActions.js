@@ -18,3 +18,9 @@ export const getAllUserConversationsAPI = createAsyncThunk("chat/getAllUserConve
 	const response = await axios.get(`${CHAT_URL}/user/${userId}`);
 	return response.data;
 });
+
+export const removeRecipientFromChat = createAsyncThunk("chat/removeRecipientFromChat", async chatId => {
+	const currId = localStorage.getItem("QuePasaChat-id");
+	const response = await axios.post(`${CHAT_URL}/removeRecipient/${chatId}`, { currId });
+	return response.data;
+});

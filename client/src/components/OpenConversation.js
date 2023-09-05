@@ -1,16 +1,19 @@
 import React, { useState, useCallback } from "react";
-import { Form, InputGroup, Button } from "react-bootstrap";
+import { Form, InputGroup, Button, Navbar, Container } from "react-bootstrap";
 import { useConversations } from "../context/ConversationProvider";
+import { useDispatch } from "react-redux";
+import { removeRecipientFromChat } from "../Redux/Actions/chatActions";
 
 export default function OpenConversation() {
 	const [text, setText] = useState("");
+	const dispatch = useDispatch();
 	const id = localStorage.getItem("QuePasaChat-id");
 	const setRef = useCallback(node => {
 		if (node) {
 			node.scrollIntoView({ smooth: true });
 		}
 	}, []);
-	const { sendMessage, selectedConversation } = useConversations();
+	const { sendMessage, selectedConversation, dispatchRemoveRecipienteFromChat } = useConversations();
 	function handleSubmit(e) {
 		e.preventDefault();
 		//console.log(selectedConversation);
@@ -23,9 +26,20 @@ export default function OpenConversation() {
 		setText("");
 	}
 
+	const removeRecipientFromChat = () => {
+		dispatchRemoveRecipienteFromChat(selectedConversation._id);
+	};
+
 	return (
 		<div className='d-flex flex-column flex-grow-1'>
 			<div className='flex-grow-1 overflow-auto'>
+				<Navbar className='bg-light ' sticky='top' data-bs-theme='dark'>
+					<Container fluid>
+						<Button variant='danger' size='sm' onClick={removeRecipientFromChat}>
+							{selectedConversation.isGroupChat ? "Exit Group" : "Exit Conversation"}{" "}
+						</Button>
+					</Container>
+				</Navbar>
 				<div className='d-flex flex-column align-items-start justify-content-end px-3'>
 					{selectedConversation.messages.map((message, index) => {
 						//console.log(message);
