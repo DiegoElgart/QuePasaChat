@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
-//import { useContacts } from "../context/ContactsProvider";
 import { useConversations } from "../context/ConversationProvider";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../Redux/Slices/authSlice";
+import { selectUser, selectUserContacts } from "../Redux/Slices/authSlice";
 
 export default function NewConversationModal({ closeModal }) {
 	const [selectedContactIds, setSelectedContactIds] = useState([]);
 	const { user } = useSelector(selectUser);
+	const contacts = useSelector(selectUserContacts);
 	const { dispatchCreateConversationAPI } = useConversations();
 	function handleSubmit(e) {
 		e.preventDefault();
@@ -33,9 +33,14 @@ export default function NewConversationModal({ closeModal }) {
 			<Modal.Header closeButton>Create Conversation</Modal.Header>
 			<Modal.Body>
 				<Form onSubmit={handleSubmit}>
-					{user.contacts.map(contact => (
-						<Form.Group controlId={contact._id} key={contact._id}>
-							<Form.Check type='checkbox' value={selectedContactIds.includes(contact._id)} label={contact.username} onChange={() => handleCheckboxChange(contact._id)} />
+					{contacts.map(contact => (
+						<Form.Group controlId={contact.contactId._id} key={contact.contactId._id}>
+							<Form.Check
+								type='checkbox'
+								value={selectedContactIds.includes(contact.contactId._id)}
+								label={contact.contactId.username}
+								onChange={() => handleCheckboxChange(contact.contactId._id)}
+							/>
 						</Form.Group>
 					))}
 					<Button type='submit'>Create</Button>

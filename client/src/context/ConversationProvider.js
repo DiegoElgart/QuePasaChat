@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
-import { selectUser } from "../Redux/Slices/authSlice";
+import { selectUser, selectUserContacts } from "../Redux/Slices/authSlice";
 
 import { useSocket } from "./SocketProvider";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,23 +17,30 @@ export function ConversationsProvider({ children }) {
 	const { conversations: conversationsAPI } = useSelector(selectConversation);
 	const dispatch = useDispatch();
 	const id = localStorage.getItem("QuePasaChat-id");
-	const [contacts, setContacts] = useState([]);
+	//const [contacts, setContacts] = useState([]);
+	const contacts = useSelector(selectUserContacts);
 	const [conversations, setConversations] = useState([]);
 	const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
 	const socket = useSocket();
 
-	useEffect(() => {
-		setContacts(user.contacts);
-	}, [user]);
+	// useEffect(() => {
+	// 	setContacts(user.contacts);
+	// }, [user]);
 
 	useEffect(() => {
 		setConversations(conversationsAPI);
 	}, [conversationsAPI]);
 
 	async function dispatchCreateConversationAPI(selectedContactIds) {
-		const contactsForRecipients = contacts.filter(contact => selectedContactIds.includes(contact._id.toString()));
-		contactsForRecipients.push(user);
-		await dispatch(createConversationAPI(contactsForRecipients));
+		const contactsForRecipients = contacts.filter(contact => selectedContactIds.includes(contact.contactId._id.toString()));
+		console.log(contactsForRecipients);
+		const filteredContacts = contactsForRecipients.map(contact => ({
+			_id: contact.contactId._id,
+			username: contact.contactId.username,
+		}));
+		//console.log(filteredContacts);
+		filteredContacts.push(user);
+		await dispatch(createConversationAPI(filteredContacts));
 	}
 
 	async function dispatchRemoveRecipienteFromChat(chatId) {
@@ -70,9 +77,9 @@ export function ConversationsProvider({ children }) {
 	const formattedConversations = conversations.map((conversation, index) => {
 		const messages = conversation.messages.map(message => {
 			const contact = contacts.find(contact => {
-				return contact._id === message.sender;
+				return contact.contactId._id === message.sender;
 			});
-			const username = (contact && contact.username) || message.sender;
+			const username = (contact && contact.contactId.username) || message.sender;
 			const fromMe = id === message.sender;
 			return { ...message, senderUsername: username, fromMe };
 		});

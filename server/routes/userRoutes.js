@@ -77,14 +77,15 @@ router.post("/:id/contacts", async (req, res) => {
 
 	try {
 		let thisUser = await User.findById(id);
-		const contactExists = thisUser.contacts.find(contact => contact.contactId.toString() === contactId);
-		console.log(contactExists);
-		// const newContact = { contactId: contactId, isBlocked: false };
-		// thisUser.contacts.push(newContact);
-		// thisUser.save();
-		// let otherUser = await User.findById(contactId);
-		// otherUser.contacts.push({ contactId: id });
-		// otherUser.save();
+		const contactExists = thisUser.contacts.findIndex(contact => contact.contactId.toString() === contactId);
+		if (contactExists == -1) {
+			const newContact = { contactId: contactId, isBlocked: false };
+			thisUser.contacts.push(newContact);
+			thisUser.save();
+			let otherUser = await User.findById(contactId);
+			otherUser.contacts.push({ contactId: id });
+			otherUser.save();
+		}
 
 		const user = await User.findById(id).populate("contacts.contactId", "username");
 		return res.status(200).send(user);
@@ -106,7 +107,9 @@ router.post("/blockContact/:id", async (req, res) => {
 		const { id } = req.params;
 		const { contactId } = req.body;
 		const user = await User.findById(id);
-		user.blockedList.push(new mongoose.Types.ObjectId(contactId));
+		const { contacts } = user;
+		const contact = contacts.filter(contact => contact.contactId == contactId);
+		console.log(contact);
 		user.save();
 		res.status(200).send(user);
 	} catch (err) {

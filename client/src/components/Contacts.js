@@ -7,10 +7,8 @@ import { blockUnblockContact } from "../Redux/Actions/userActions";
 export default function Contacts() {
 	const dispatch = useDispatch();
 	const contacts = useSelector(selectUserContacts);
-	console.log(contacts);
 	const handleBlock = (e, contact) => {
 		e.preventDefault();
-		console.log(contact._id);
 		dispatch(blockUnblockContact(contact._id));
 	};
 
