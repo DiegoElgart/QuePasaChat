@@ -9,7 +9,7 @@ export default function Contacts() {
 	const contacts = useSelector(selectUserContacts);
 	const handleBlock = (e, contact) => {
 		e.preventDefault();
-		dispatch(blockUnblockContact(contact._id));
+		dispatch(blockUnblockContact(contact.contactId._id));
 	};
 
 	return (
@@ -18,7 +18,7 @@ export default function Contacts() {
 				<ListGroup.Item key={contact.contactId._id} className='d-flex justify-content-between'>
 					{contact.contactId.username}
 					<Button variant='outline-danger' size='sm' onClick={e => handleBlock(e, contact)}>
-						Block
+						{contact.isBlocked ? "Unblock" : "Block"}
 					</Button>
 				</ListGroup.Item>
 			))}

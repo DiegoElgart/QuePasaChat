@@ -106,11 +106,13 @@ router.post("/blockContact/:id", async (req, res) => {
 	try {
 		const { id } = req.params;
 		const { contactId } = req.body;
-		const user = await User.findById(id);
+		const user = await User.findById(id).populate("contacts.contactId", "username");
 		const { contacts } = user;
-		const contact = contacts.filter(contact => contact.contactId == contactId);
-		console.log(contact);
+		const contactIndex = contacts.findIndex(contact => contact.contactId._id.toString() == contactId);
+		user.contacts[contactIndex].isBlocked = !user.contacts[contactIndex].isBlocked;
+
 		user.save();
+
 		res.status(200).send(user);
 	} catch (err) {
 		return res.status(500).send(err.message);

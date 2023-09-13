@@ -20,7 +20,7 @@ export default function Conversations() {
 			{conversations.map((conversation, index) => (
 				<ListGroup.Item key={conversation._id} action onClick={() => selectConversationIndex(index)} active={conversation.selected}>
 					{conversation.recipients
-						.filter(r => r.username !== user.username) // Exclude current user's username
+						.filter(r => r.username !== user.username)
 						.map(r => r.username)
 						.join(", ")}
 				</ListGroup.Item>

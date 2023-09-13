@@ -53,7 +53,11 @@ export function ConversationsProvider({ children }) {
 	useEffect(() => {
 		if (socket == null) return;
 		socket.on("receive-message", data => {
-			dispatch(getAllUserConversationsAPI(user._id));
+			const checkIfBlock = contacts.find(contact => contact.contactId._id === data.sender);
+			//console.log(checkIfBlock.isBlocked);
+			if (!checkIfBlock.isBlocked) {
+				dispatch(getAllUserConversationsAPI(user._id));
+			}
 		});
 
 		return () => socket.off("receive-message");

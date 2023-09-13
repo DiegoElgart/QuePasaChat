@@ -67,7 +67,7 @@ const authSlice = createSlice({
 				state.error = action.payload;
 			})
 			.addCase(blockUnblockContact.fulfilled, (state, action) => {
-				console.log(action.payload);
+				state.contacts = action.payload.contacts;
 			});
 	},
 });

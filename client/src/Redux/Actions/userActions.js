@@ -37,7 +37,6 @@ export const addContactToUser = createAsyncThunk("user/update", async contactId 
 export const blockUnblockContact = createAsyncThunk("user/blockUnblockContact", async contactId => {
 	const currId = localStorage.getItem("QuePasaChat-id");
 
-	console.log(contactId);
 	const response = await axios.post(`${AUTH_URL}/blockContact/${currId}`, { contactId: contactId });
 	return response.data;
 });
