@@ -14,7 +14,6 @@ const chatSchema = new Schema(
 	},
 	{ timestamps: true, versionKey: false }
 );
-// Define a pre-save hook to limit the number of messages to 20.
 chatSchema.pre("save", function (next) {
 	if (this.messages.length > 20) {
 		this.messages = this.messages.slice(-20);

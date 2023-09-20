@@ -1,6 +1,5 @@
 const cors = require("cors");
 const express = require("express");
-//const { createServer } = require("http");
 const socket = require("socket.io");
 
 const app = express();
@@ -34,8 +33,6 @@ io.on("connection", socket => {
 	socket.on("send-message", ({ recipients, text, conversationId }) => {
 		recipients.forEach(recipient => {
 			const newRecipients = recipients.filter(r => r !== recipient);
-
-			// newRecipients.push(id);
 
 			socket.broadcast.to(recipient._id).emit("receive-message", {
 				_id: conversationId,

@@ -36,7 +36,7 @@ router.post("/:id", async (req, res) => {
 					},
 				},
 			},
-			{ new: true } // This option returns the updated document
+			{ new: true }
 		);
 
 		if (!chat) {
