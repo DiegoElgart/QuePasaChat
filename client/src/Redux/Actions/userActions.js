@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { selectUser } from "../Slices/authSlice";
+
 const AUTH_URL = "http://localhost:4000/auth";
 
 export const login = createAsyncThunk("auth/login", async loginData => {

@@ -33,7 +33,6 @@ export function ConversationsProvider({ children }) {
 			_id: contact.contactId._id,
 			username: contact.contactId.username,
 		}));
-		//console.log(filteredContacts);
 		filteredContacts.push(user);
 		await dispatch(createConversationAPI(filteredContacts));
 	}

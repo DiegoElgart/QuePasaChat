@@ -1,6 +1,6 @@
 import "../App.css";
 import styles from "../styles/Modal.module.css";
-import { Container, Form, Button, Alert } from "react-bootstrap";
+import { Container, Form, Button } from "react-bootstrap";
 
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";

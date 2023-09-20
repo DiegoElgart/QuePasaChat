@@ -29,11 +29,7 @@ const chatSlice = createSlice({
 				const existingConversationIndex = state.conversations.findIndex(conversation => conversation._id === _id);
 				if (existingConversationIndex !== -1) {
 					state.conversations[existingConversationIndex].messages.push(messages[messages.length - 1]);
-
-					// Update the existing conversation with the new message
 				} else {
-					// Create a new conversation
-
 					state.conversations = [...state.conversations, action.payload];
 				}
 			})

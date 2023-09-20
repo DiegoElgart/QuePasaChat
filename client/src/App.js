@@ -4,8 +4,6 @@ import { SocketProvider } from "./context/SocketProvider";
 import { ConversationsProvider } from "./context/ConversationProvider";
 import Dashboard from "./components/Dashboard";
 import useLocalStorage from "./hooks/useLocalStorage";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 
 function App() {
 	const [id, setId] = useLocalStorage("id");

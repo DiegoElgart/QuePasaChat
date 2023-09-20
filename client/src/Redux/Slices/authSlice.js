@@ -57,8 +57,7 @@ const authSlice = createSlice({
 				state.error = action.payload;
 			})
 			.addCase(addContactToUser.fulfilled, (state, action) => {
-				// state.contacts.push(action.payload);
-				// state.user = { ...state.user, contacts: [...state.user.user.contacts, action.payload] };
+			
 				state.user.contacts = action.payload.contacts;
 				state.contacts = action.payload.contacts;
 				state.error = false;

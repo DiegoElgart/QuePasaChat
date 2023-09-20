@@ -1,12 +1,9 @@
 import React, { useState, useCallback } from "react";
 import { Form, InputGroup, Button, Navbar, Container } from "react-bootstrap";
 import { useConversations } from "../context/ConversationProvider";
-import { useDispatch } from "react-redux";
-import { removeRecipientFromChat } from "../Redux/Actions/chatActions";
 
 export default function OpenConversation() {
 	const [text, setText] = useState("");
-	const dispatch = useDispatch();
 	const id = localStorage.getItem("QuePasaChat-id");
 	const setRef = useCallback(node => {
 		if (node) {
@@ -16,13 +13,7 @@ export default function OpenConversation() {
 	const { sendMessage, selectedConversation, dispatchRemoveRecipienteFromChat } = useConversations();
 	function handleSubmit(e) {
 		e.preventDefault();
-		//console.log(selectedConversation);
-		sendMessage(
-			//selectedConversation.recipients.map(r => r._id),
-			selectedConversation.recipients,
-			text,
-			selectedConversation._id
-		);
+		sendMessage(selectedConversation.recipients, text, selectedConversation._id);
 		setText("");
 	}
 
