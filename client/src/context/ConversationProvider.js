@@ -83,11 +83,13 @@ export function ConversationsProvider({ children }) {
 			const contact = contacts.find(contact => {
 				return contact.contactId._id === message.sender;
 			});
+
 			const username = (contact && contact.contactId.username) || message.sender;
 			const fromMe = id === message.sender;
 			return { ...message, senderUsername: username, fromMe };
 		});
 		const selected = index === selectedConversationIndex;
+
 		return { ...conversation, messages, selected };
 	});
 
