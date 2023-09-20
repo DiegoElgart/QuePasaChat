@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { CloseButton, ListGroup, Overlay } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 import { useConversations } from "../context/ConversationProvider";
 import { useSelector } from "react-redux";
-import { selectConversation } from "../Redux/Slices/chatSlice";
 import { selectUser, selectUserContacts } from "../Redux/Slices/authSlice";
-import { all } from "axios";
 
 export default function Conversations() {
 	const { conversations, selectConversationIndex } = useConversations();

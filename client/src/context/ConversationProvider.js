@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useCallback } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { selectUser, selectUserContacts } from "../Redux/Slices/authSlice";
 
 import { useSocket } from "./SocketProvider";
@@ -17,15 +17,10 @@ export function ConversationsProvider({ children }) {
 	const { conversations: conversationsAPI } = useSelector(selectConversation);
 	const dispatch = useDispatch();
 	const id = localStorage.getItem("QuePasaChat-id");
-	//const [contacts, setContacts] = useState([]);
 	const contacts = useSelector(selectUserContacts);
 	const [conversations, setConversations] = useState([]);
 	const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
 	const socket = useSocket();
-
-	// useEffect(() => {
-	// 	setContacts(user.contacts);
-	// }, [user]);
 
 	useEffect(() => {
 		setConversations(conversationsAPI);
@@ -54,7 +49,6 @@ export function ConversationsProvider({ children }) {
 		if (socket == null) return;
 		socket.on("receive-message", data => {
 			const checkIfBlock = contacts.find(contact => contact.contactId._id === data.sender);
-			//console.log(checkIfBlock.isBlocked);
 			if (!checkIfBlock.isBlocked) {
 				dispatch(getAllUserConversationsAPI(user._id));
 			}
